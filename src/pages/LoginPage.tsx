@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import logoMark from "../assets/logo/logo-mark.png";
 import BrandFooter from "../components/BrandFooter";
+import InstallAppButton from "../components/InstallAppButton";
 import SchoolLogo from "../components/SchoolLogo";
 import { useAuth } from "../context/AuthContext";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
@@ -281,6 +282,8 @@ export default function LoginPage() {
             ? "لا تملكين حسابًا؟ تواصلي مع إدارة المدرسة لإنشاء حساب لك."
             : "فقدتِ رمزكِ؟ اطلبي من معلمتكِ عرضه لكِ من جديد."}
         </p>
+
+        <InstallAppButton className="mt-5" />
 
         <BrandFooter className="mt-8 px-0" />
       </div>
