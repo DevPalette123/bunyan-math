@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  direction: rtl;
+  font-family: "Tajawal", "Cairo", system-ui, sans-serif;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar — subtle, matches the sand/palm palette */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d8cdb8;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c7b99d;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Utility: convert digits to Arabic-Indic numerals for display */
+.arabic-nums {
+  font-variant-numeric: normal;
+}
