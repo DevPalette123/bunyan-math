@@ -18,7 +18,12 @@
 // and test it for real before relying on it.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "../_shared/cors.ts";
-import { generateStudentCode, studentCodeToEmail } from "../_shared/studentCode.ts";
+import {
+  CODE_PREFIX,
+  nextSequenceNumber,
+  studentCodePassword,
+  studentCodeToEmail,
+} from "../_shared/studentCode.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -62,7 +67,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (!profile || profile.role !== "teacher") {
-      return new Response(JSON.stringify({ error: "هذا الإجراء مخصص للمعلمة فقط." }), {
+      return new Response(JSON.stringify({ error: "هذا الإجراء مخصص للمعلم فقط." }), {
         status: 403,
         headers: jsonHeaders,
       });
@@ -79,12 +84,12 @@ Deno.serve(async (req) => {
 
     if (!classRow) {
       return new Response(
-        JSON.stringify({ error: "تعذّر العثور على صف هذه المعلمة." }),
+        JSON.stringify({ error: "تعذّر العثور على صف هذا المعلم." }),
         { status: 500, headers: jsonHeaders }
       );
     }
 
-    // وضع التدشين: معلمة التجربة تضيف طلابًا كأي معلمة، لكن بسقف صغير لحماية الموارد.
+    // وضع التدشين: معلم التجربة تضيف طلابًا كأي معلم، لكن بسقف صغير لحماية الموارد.
     // (التعريف من app_metadata التي لا يستطيع المستخدم تعديلها؛ هذا سقف موارد لا آلية حماية بيانات.)
     const isDemoCaller = userData.user.app_metadata?.demo === true;
     if (isDemoCaller) {
@@ -94,7 +99,7 @@ Deno.serve(async (req) => {
         .eq("class_id", classRow.id);
       if ((count ?? 0) >= 10) {
         return new Response(
-          JSON.stringify({ error: "وصلتِ للحد الأقصى لعدد الطلاب في وضع التجربة (١٠)." }),
+          JSON.stringify({ error: "وصلت للحد الأقصى لعدد الطلاب في وضع التجربة (١٠)." }),
           { status: 400, headers: jsonHeaders }
         );
       }
@@ -116,18 +121,34 @@ Deno.serve(async (req) => {
     let createdUserId: string | null = null;
     let finalCode = "";
 
-    // Codes are short and random — collisions are rare but possible, so
-    // retry with a fresh code a few times rather than failing outright.
-    for (let attempt = 0; attempt < 6; attempt++) {
-      const code = generateStudentCode();
+    // الرمز بسيط ليحفظه الطالب: BNY + رقم تسلسلي (BNY1، BNY2 …).
+    // الرقم هو أصغر رقم غير مستعمل في كل الجدول (الرمز فريد على مستوى المنصة).
+    // نقرأ الرموز على دفعات لأن PostgREST يقطع النتيجة عند ١٠٠٠ صف.
+    const existingCodes: string[] = [];
+    for (let from = 0; ; from += 1000) {
+      const { data: page } = await adminClient
+        .from("students")
+        .select("login_code")
+        .like("login_code", `${CODE_PREFIX}%`)
+        .order("login_code", { ascending: true })
+        .range(from, from + 999);
+      for (const r of page ?? []) if (r.login_code) existingCodes.push(r.login_code as string);
+      if (!page || page.length < 1000) break;
+    }
+    const triedNumbers = new Set<number>();
+
+    // لو سبقنا طلب آخر إلى الرقم نفسه (تعارض نادر) نجرّب الرقم التالي.
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const seq = nextSequenceNumber(existingCodes, triedNumbers);
+      const code = `${CODE_PREFIX}${seq}`;
       const email = studentCodeToEmail(code);
 
       const { data: created, error: createError } = await adminClient.auth.admin.createUser({
         email,
-        password: code,
+        password: studentCodePassword(code),
         email_confirm: true,
         user_metadata: { role: "student", full_name: fullName },
-        // طالب أضافته معلمة تجريبية يبقى تجريبيًا (شارة الواجهة فقط).
+        // طالب أضافته معلم تجريبي يبقى تجريبيًا (شارة الواجهة فقط).
         ...(isDemoCaller ? { app_metadata: { demo: true } } : {}),
       });
 
@@ -144,12 +165,13 @@ Deno.serve(async (req) => {
           { status: 500, headers: jsonHeaders }
         );
       }
-      // else: loop and try a new random code
+      // else: الرقم محجوز — نجرّب الذي يليه
+      triedNumbers.add(seq);
     }
 
     if (!createdUserId) {
       return new Response(
-        JSON.stringify({ error: "تعذّر توليد رمز دخول فريد، حاولي مرة أخرى." }),
+        JSON.stringify({ error: "تعذّر توليد رمز دخول فريد، حاول مرة أخرى." }),
         { status: 500, headers: jsonHeaders }
       );
     }

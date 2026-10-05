@@ -1,21 +1,21 @@
 #!/usr/bin/env node
-// اختبار توافق «الدخول التجريبي» مع إعدادات Supabase الفعلية عندكِ — قبل نشر أي شيء.
+// اختبار توافق «الدخول التجريبي» مع إعدادات Supabase الفعلية عندك — قبل نشر أي شيء.
 //
 //   SUPABASE_URL=...  SUPABASE_ANON_KEY=...  SUPABASE_SERVICE_ROLE_KEY=...  node scripts/probe-demo-auth.mjs
 //
 // يفعل هذا فقط:
-//   1) ينشئ مستخدمًا مؤقتًا واحدًا بريده @demo.bunyan-math.app (معلمة، app_metadata.demo = true)
+//   1) ينشئ مستخدمًا مؤقتًا واحدًا بريده @demo.bunyan-math.app (معلم، app_metadata.demo = true)
 //   2) يولّد له رابط دخول بـ auth.admin.generateLink ثم يحوّله لجلسة بـ verifyOtp (نفس ما ستفعله التجربة)
 //   3) يتحقق أن الجلسة صالحة، وأن app_metadata.demo ظاهرة فيها، وأن صف profiles الخاص به قابل للقراءة
 //   4) يحذف المستخدم (ويتأكد أن الحذف أزال صفوفه بالتتالي)
-// لا يلمس أي مستخدم أو بيانات حقيقية. مفتاح service-role يُستخدم من جهازكِ فقط ولا يُحفظ في أي ملف.
+// لا يلمس أي مستخدم أو بيانات حقيقية. مفتاح service-role يُستخدم من جهازك فقط ولا يُحفظ في أي ملف.
 import { createClient } from "@supabase/supabase-js";
 
 const url = process.env.SUPABASE_URL;
 const anon = process.env.SUPABASE_ANON_KEY;
 const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !anon || !service) {
-  console.error("✗ عيّني المتغيرات SUPABASE_URL و SUPABASE_ANON_KEY و SUPABASE_SERVICE_ROLE_KEY ثم أعيدي التشغيل.");
+  console.error("✗ عيّني المتغيرات SUPABASE_URL و SUPABASE_ANON_KEY و SUPABASE_SERVICE_ROLE_KEY ثم أعد التشغيل.");
   process.exit(1);
 }
 
@@ -46,12 +46,12 @@ try {
   const { data: link, error: linkErr } = await admin.auth.admin.generateLink({ type: "magiclink", email });
   const hashed = link?.properties?.hashed_token;
   check("auth.admin.generateLink يُرجع hashed_token", !linkErr && !!hashed, linkErr?.message);
-  if (!hashed) throw new Error("generateLink لم يُرجع رمزًا — راجعي إعدادات مزوّد البريد في Auth.");
+  if (!hashed) throw new Error("generateLink لم يُرجع رمزًا — راجع إعدادات مزوّد البريد في Auth.");
 
   const { data: verified, error: otpErr } = await anonClient.auth.verifyOtp({ token_hash: hashed, type: "magiclink" });
   check("verifyOtp يحوّل الرمز إلى جلسة", !otpErr && !!verified?.session, otpErr?.message);
   const session = verified?.session;
-  if (!session) throw new Error("verifyOtp فشل — قد تكون حدود المعدل أو نوع الرمز. جرّبي type: 'email' وأخبريني.");
+  if (!session) throw new Error("verifyOtp فشل — قد تكون حدود المعدل أو نوع الرمز. جرّب type: 'email' وأخبريني.");
 
   check("app_metadata.demo ظاهرة في الجلسة", session.user.app_metadata?.demo === true);
   check("المستخدم نفسه هو المُنشأ", session.user.id === userId);
@@ -60,7 +60,7 @@ try {
   check("trigger handle_new_user أنشأ profiles والجلسة تقرؤه عبر RLS", !profErr && prof?.role === "teacher", profErr?.message);
 
   const { data: cls } = await anonClient.from("classes").select("id").limit(5);
-  check("المعلمة التجريبية ترى صفها فقط (صف واحد)", Array.isArray(cls) && cls.length === 1, `عدد الصفوف الظاهرة: ${cls?.length}`);
+  check("المعلم التجريبية ترى صفها فقط (صف واحد)", Array.isArray(cls) && cls.length === 1, `عدد الصفوف الظاهرة: ${cls?.length}`);
 
   const { data: students } = await anonClient.from("students").select("id").limit(50);
   check("لا ترى أي طالب (صفها جديد وفارغ)", Array.isArray(students) && students.length === 0, `عدد: ${students?.length}`);
@@ -78,6 +78,6 @@ try {
 }
 
 const allOk = results.every(Boolean);
-console.log("\n" + (allOk ? "✅ النتيجة: الدخول التجريبي متوافق مع مشروعكِ." : "❌ النتيجة: هناك فحوص فشلت — أرسلي لي المخرجات كاملة قبل التشغيل الفعلي."));
+console.log("\n" + (allOk ? "✅ النتيجة: الدخول التجريبي متوافق مع مشروعك." : "❌ النتيجة: هناك فحوص فشلت — أرسلي لي المخرجات كاملة قبل التشغيل الفعلي."));
 console.log("تذكير: حدود معدل Auth (لكل IP) قد تُبطئ دخول عدة معلمات من شبكة واحدة؛ راجعيها في Auth → Rate Limits قبل التدشين.");
 process.exit(allOk ? 0 : 1);

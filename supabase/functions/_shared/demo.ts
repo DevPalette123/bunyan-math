@@ -37,7 +37,7 @@ export function randomToken(bytes = 32): string {
   return [...a].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-/** إنشاء Slot كامل: معلمة + صفها + ٦ طالبات + بيانات، ثم يصبح «ready». */
+/** إنشاء Slot كامل: معلم + صفها + ٦ طلاب + بيانات، ثم يصبح «ready». */
 export async function provisionSlot(admin: Admin): Promise<string> {
   const { data: slot, error: slotErr } = await admin
     .from("demo_slots").insert({ state: "provisioning" }).select("id").single();
@@ -49,19 +49,19 @@ export async function provisionSlot(admin: Admin): Promise<string> {
   try {
     const appMeta = { demo: true, demo_slot: slotId };
 
-    // المعلمة: كلمة مرور عشوائية لا يعرفها أحد ولا تُستخدم (الدخول عبر generateLink فقط).
+    // المعلم: كلمة مرور عشوائية لا يعرفها أحد ولا تُستخدم (الدخول عبر generateLink فقط).
     const { data: t, error: tErr } = await admin.auth.admin.createUser({
       email: `t-${slotId.replace(/-/g, "").slice(0, 16)}@${DEMO_DOMAIN}`,
       password: randomToken(24),
       email_confirm: true,
-      user_metadata: { role: "teacher", full_name: "معلمة تجريبية" },
+      user_metadata: { role: "teacher", full_name: "معلم تجريبي" },
       app_metadata: appMeta,
     });
     if (tErr || !t.user) throw new Error(`createUser(teacher): ${tErr?.message ?? "no user"}`);
     const teacherId = t.user.id;
     createdUserIds.push(teacherId);
 
-    // الطالبات: نفس مخطط النظام (الرمز = كلمة المرور) كي يعمل الرمز الظاهر في لوحة المعلمة فعلًا.
+    // الطلاب: نفس مخطط النظام (الرمز = كلمة المرور) كي يعمل الرمز الظاهر في لوحة المعلم فعلًا.
     const students = await Promise.all(
       DEMO_STUDENTS.map(async (s) => {
         for (let attempt = 0; attempt < 8; attempt++) {
@@ -83,20 +83,20 @@ export async function provisionSlot(admin: Admin): Promise<string> {
       })
     );
 
-    // لا نفترض أن trigger handle_new_user في قاعدتكِ الحية يُنشئ كل الصفوف (نسخته قد تكون أقدم):
-    // نتأكد من وجود profiles/teachers/students، وننشئ الصف إن لم يوجد — كما تفعل لوحة المعلمة
+    // لا نفترض أن trigger handle_new_user في قاعدتك الحية يُنشئ كل الصفوف (نسخته قد تكون أقدم):
+    // نتأكد من وجود profiles/teachers/students، وننشئ الصف إن لم يوجد — كما تفعل لوحة المعلم
     // نفسها عند أول دخول (TeacherDashboardPage). كل ذلك «ignoreDuplicates» فلا يغيّر ما أنشأه الـtrigger.
     const ensure = async (table: string, rows: Record<string, unknown>[]) => {
       const { error } = await admin.from(table).upsert(rows, { onConflict: "id", ignoreDuplicates: true });
       if (error) throw new Error(`ensure ${table}: ${error.message}`);
     };
     // profiles خاصة: الدور هنا هو مصدر الحقيقة الوحيد للتوجيه في الواجهة (ProtectedRoute/RootRedirect)،
-    // فنفرضه صراحةً (upsert بلا ignoreDuplicates) حتى لو أنشأ trigger في قاعدتكِ الحية صفًّا بدور مختلف.
+    // فنفرضه صراحةً (upsert بلا ignoreDuplicates) حتى لو أنشأ trigger في قاعدتك الحية صفًّا بدور مختلف.
     // الحسابات هنا مُنشأة للتو في هذا الـSlot فقط، فلا يمس هذا أي حساب حقيقي.
     {
       const { error } = await admin.from("profiles").upsert(
         [
-          { id: teacherId, role: "teacher", full_name: "معلمة تجريبية" },
+          { id: teacherId, role: "teacher", full_name: "معلم تجريبي" },
           ...students.map((s) => ({ id: s.id, role: "student", full_name: s.name })),
         ],
         { onConflict: "id" },
@@ -163,8 +163,8 @@ export async function teardownSlot(admin: Admin, slotId: string): Promise<void> 
   const { data: accounts } = await admin.from("demo_accounts").select("user_id, role").eq("slot_id", slotId);
   const known = new Set((accounts ?? []).map((a) => a.user_id as string));
 
-  // طلاب أضافتهم معلمة التجربة بنفسها: class_id يُصفَّر عند حذف الصف ولا يُحذف الطالب،
-  // فيجب حذفهم صراحةً قبل حذف المعلمة.
+  // طلاب أضافتهم معلم التجربة بنفسها: class_id يُصفَّر عند حذف الصف ولا يُحذف الطالب،
+  // فيجب حذفهم صراحةً قبل حذف المعلم.
   const extras: string[] = [];
   if (slot?.class_id) {
     const { data: rows } = await admin.from("students").select("id").eq("class_id", slot.class_id);

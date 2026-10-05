@@ -124,7 +124,7 @@ for (const r of rows) {
     const truth = r.a - lower >= r.b / 2 ? upper : lower;
     if (String(truth) !== r.ans) fail(r, `الإجابة خاطئة (الصحيحة ${truth})`);
 
-    const expectedText = `قرّبي العدد ${r.a} لأقرب ${r.b === 10 ? "عشرة" : "مئة"}`;
+    const expectedText = `قرّب العدد ${r.a} لأقرب ${r.b === 10 ? "عشرة" : "مئة"}`;
     if (r.text !== expectedText) fail(r, "نص السؤال لا يطابق العدد/الوحدة");
 
     if (r.tier === "easy" && !(r.a >= 10 && r.a <= 99 && r.b === 10)) fail(r, "easy: عدد من خانتين لأقرب عشرة");
@@ -178,7 +178,7 @@ for (const r of rows) {
       if (truth !== r.ans) fail(r, `الإجابة خاطئة (الصحيحة ${truth})`);
 
       const expectedText =
-        `رتّبي الأعداد التالية ${descending ? "تنازليًا" : "تصاعديًا"}: ` + nums.join(", ");
+        `رتّب الأعداد التالية ${descending ? "تنازليًا" : "تصاعديًا"}: ` + nums.join(", ");
       if (r.text !== expectedText) fail(r, "نص السؤال لا يطابق الأعداد المعروضة");
 
       const eq = (x, y) => x.every((val, i) => val === y[i]);

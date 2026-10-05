@@ -1,4 +1,4 @@
-// نتائج مسابقة — للمعلمة فقط: /teacher/competitions/:id/results
+// نتائج مسابقة — للمعلم فقط: /teacher/competitions/:id/results
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -32,7 +32,7 @@ export default function CompetitionResultsPage() {
       if (!h) { setError("المسابقة غير موجودة."); return; }
       setTitle(h.title);
       setRows(s);
-    } catch { setError("تعذّر تحميل النتائج. حاولي مرة أخرى."); }
+    } catch { setError("تعذّر تحميل النتائج. حاول مرة أخرى."); }
   }, [id]);
 
   useEffect(() => { load(); }, [load]);

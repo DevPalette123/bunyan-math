@@ -1,7 +1,7 @@
 // «ألعب» — الجانب البرمجي المشترك لكل الألعاب. الأسئلة والإجابات الصحيحة والنتيجة
 // تُحسب كلها في قاعدة البيانات (انظر supabase/phase3-play-games.sql) بنفس أسلوب
 // «اختبر»؛ هذا الملف لا يولّد سؤالًا ولا يحسب درجة، ولا يرى الإجابة الصحيحة لأي
-// سؤال قبل أن تجيب عنه الطالبة. إضافة لعبة جديدة لاحقًا لا تغيّر شيئًا هنا: صف في
+// سؤال قبل أن تجيب عنه الطالب. إضافة لعبة جديدة لاحقًا لا تغيّر شيئًا هنا: صف في
 // كتالوج play_games + بنك أسئلتها + إعداد عرضها في data/playGameThemes.ts.
 //
 // ⚠️ الاستعلامات على game_attempt_questions تذكر الأعمدة صراحةً: عمود answer_key
@@ -35,10 +35,10 @@ export type GameVisual =
   | { kind: "numberLine"; value: number; lower: number; upper: number; unit: 10 | 100 }
   // مغامرة الضعف: العدد الأصلي ثم نسختان متطابقتان منه (تمثيل بصري للضعف).
   | { kind: "doublingPods"; value: number }
-  // مغامرتا الترتيب: الأعداد الأربعة كما ستُعرض للطالبة (بترتيبها الأصلي غير
+  // مغامرتا الترتيب: الأعداد الأربعة كما ستُعرض للطالب (بترتيبها الأصلي غير
   // المرتّب) — نفس شكل «chips» في اختبر/اكتشف.
   | { kind: "chips"; numbers: number[] }
-  // مغامرة الزوجي والفردي: عدد واحد كبير تصنّفه الطالبة.
+  // مغامرة الزوجي والفردي: عدد واحد كبير تصنّفه الطالب.
   | { kind: "number"; value: number }
   // مغامرة المقارنة: عددان وعلامة تُكشف بعد الإجابة — نفس شكل «compare» في اختبر.
   | { kind: "compare"; first: number; second: number };
@@ -58,7 +58,7 @@ export interface GameQuestion {
   visual: GameVisual;
   options: string[];
   selectedAnswer: string | null;
-  /** null حتى تجيب الطالبة على هذا السؤال. */
+  /** null حتى تجيب الطالب على هذا السؤال. */
   correctAnswer: string | null;
   isCorrect: boolean | null;
 }
@@ -158,7 +158,7 @@ async function loadAttempt(attemptId: string, gameId: GameId): Promise<ActiveGam
 }
 
 // ---------------------------------------------------------------------------
-// مسار الطالبة
+// مسار الطالب
 // ---------------------------------------------------------------------------
 
 /** يبدأ محاولة جديدة في اللعبة (أو يستأنف المفتوحة إن وُجدت — الخادم يقرر). */
@@ -252,7 +252,7 @@ export async function fetchGameResult(
   };
 }
 
-/** لبطاقة «النشاط الأخير» في رئيسية الطالبة: آخر محاولة مكتملة لكل لعبة. */
+/** لبطاقة «النشاط الأخير» في رئيسية الطالب: آخر محاولة مكتملة لكل لعبة. */
 export async function fetchLatestGamesSummary(
   studentId: string
 ): Promise<{ gameId: GameId; attemptId: string; completedAt: string; percentage: number }[]> {
@@ -280,7 +280,7 @@ export async function fetchLatestGamesSummary(
 }
 
 // ---------------------------------------------------------------------------
-// مسار المعلمة (قراءة فقط — المعلمة لا تبدأ الألعاب)
+// مسار المعلم (قراءة فقط — المعلم لا تبدأ الألعاب)
 // ---------------------------------------------------------------------------
 
 export interface TeacherGameRow {
@@ -300,8 +300,8 @@ export interface TeacherGameRow {
   bestCorrect: number;
 }
 
-/** لكل طالبة ولكل لعبة: عدد المحاولات وآخر نتيجة وأفضل نتيجة — صفوف حقيقية فقط،
- *  لا شيء للطالبات اللواتي لم يلعبن. مفتاح الخريطة: studentId ثم gameId. */
+/** لكل طالب ولكل لعبة: عدد المحاولات وآخر نتيجة وأفضل نتيجة — صفوف حقيقية فقط،
+ *  لا شيء للطلاب الذين لم يلعبوا. مفتاح الخريطة: studentId ثم gameId. */
 export async function fetchClassGameOverview(
   studentIds: string[]
 ): Promise<Map<string, Partial<Record<GameId, TeacherGameRow>>>> {
@@ -368,7 +368,7 @@ export interface TeacherGameDetail {
   }[];
   /** أخطاء آخر محاولة، بنص المسألة والإجابتين. */
   mistakes: GameReviewItem[];
-  /** دقة الطالبة حسب مستوى الصعوبة في آخر محاولة. */
+  /** دقة الطالب حسب مستوى الصعوبة في آخر محاولة. */
   byDifficulty: { difficulty: GameDifficulty; correct: number; total: number }[];
 }
 

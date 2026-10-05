@@ -4,7 +4,7 @@ import { rnd, shuffle } from "./funUtils";
 import Critter from "./kit/Critters";
 import { Burst, Progress, Stage, Talk } from "./kit/ui";
 import { useEngine } from "./kit/useEngine";
-import type { FunGameProps } from "./types";
+import type { FunGameProps, FunLevel } from "./types";
 
 // الجمع بدون حمل: الضفدع يقفز إلى ورقة النيلوفر التي عليها الناتج الصحيح.
 interface Round {
@@ -14,25 +14,49 @@ interface Round {
   opts: number[];
 }
 
-function makeRounds(): Round[] {
+// المستويات: ١ مبتدئ (آحاد فقط) · ٢ متوسط (رقمان) · ٣ متقدم (ثلاثة أرقام).
+// في كل مستوى ٦ جولات من ثلاثة أنواع (جولتان لكل نوع)، وكلها بلا حمل.
+function makeRounds(level: FunLevel): Round[] {
   const out: Round[] = [];
+  const seen = new Set<string>();
   const mk = (a: number, b: number) => {
     const ans = a + b;
-    const wrongs = shuffle([ans + 1, ans - 1, ans + 10, ans - 10, ans + 2, ans - 2].filter((x) => x > 0 && x !== ans)).slice(0, 2);
+    const pool =
+      level === 1
+        ? [ans + 1, ans - 1, ans + 2, ans - 2, a, b]
+        : level === 2
+          ? [ans + 1, ans - 1, ans + 10, ans - 10, ans + 2, ans - 2]
+          : [ans + 1, ans - 1, ans + 10, ans - 10, ans + 100, ans - 100];
+    const wrongs = shuffle([...new Set(pool)].filter((x) => x > 0 && x !== ans)).slice(0, 2);
     out.push({ a, b, ans, opts: shuffle([ans, ...wrongs]) });
   };
-  for (let k = 0; k < 2; k++) {
-    const u1 = rnd(0, 5);
-    mk(rnd(1, 8) * 10 + u1, rnd(1, 9 - u1)); // عدد من رقمين + آحاد
-  }
-  for (let k = 0; k < 2; k++) {
-    const t1 = rnd(1, 6);
-    mk(t1 * 10 + rnd(1, 9), rnd(1, 9 - t1) * 10); // + عشرات كاملة
-  }
-  for (let k = 0; k < 2; k++) {
-    const t1 = rnd(1, 5);
-    const u1 = rnd(1, 6);
-    mk(t1 * 10 + u1, rnd(1, 9 - t1) * 10 + rnd(1, 9 - u1)); // رقمين + رقمين
+  // يولّد جولة جديدة غير مكرّرة (مع حماية من التكرار الدائم).
+  const add = (gen: () => [number, number]) => {
+    for (let g = 0; g < 40; g++) {
+      const [a, b] = gen();
+      const key = `${a}+${b}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        mk(a, b);
+        return;
+      }
+    }
+    const [a, b] = gen();
+    mk(a, b);
+  };
+
+  if (level === 1) {
+    for (let k = 0; k < 2; k++) add(() => { const b = rnd(1, 2); return [rnd(2, 9 - b), b]; }); // + ١ أو ٢
+    for (let k = 0; k < 2; k++) add(() => { const a = rnd(1, 4); return [a, rnd(3, 9 - a)]; }); // عددان صغيران
+    for (let k = 0; k < 2; k++) add(() => { const a = rnd(3, 6); return [a, rnd(3, 9 - a)]; }); // ناتج قريب من ٩
+  } else if (level === 2) {
+    for (let k = 0; k < 2; k++) add(() => { const u1 = rnd(0, 5); return [rnd(1, 8) * 10 + u1, rnd(1, 9 - u1)]; }); // رقمين + آحاد
+    for (let k = 0; k < 2; k++) add(() => { const t1 = rnd(1, 6); return [t1 * 10 + rnd(1, 9), rnd(1, 9 - t1) * 10]; }); // + عشرات كاملة
+    for (let k = 0; k < 2; k++) add(() => { const t1 = rnd(1, 5); const u1 = rnd(1, 6); return [t1 * 10 + u1, rnd(1, 9 - t1) * 10 + rnd(1, 9 - u1)]; }); // رقمين + رقمين
+  } else {
+    for (let k = 0; k < 2; k++) add(() => { const u1 = rnd(1, 6); return [rnd(1, 8) * 100 + rnd(0, 9) * 10 + u1, rnd(1, 9 - u1)]; }); // ثلاثة أرقام + آحاد
+    for (let k = 0; k < 2; k++) add(() => { const h1 = rnd(1, 5); return [h1 * 100 + rnd(11, 98), rnd(1, 9 - h1) * 100]; }); // + مئات كاملة
+    for (let k = 0; k < 2; k++) add(() => { const h1 = rnd(1, 4); const t1 = rnd(1, 6); const u1 = rnd(1, 6); return [h1 * 100 + t1 * 10 + u1, rnd(1, 9 - h1) * 100 + rnd(1, 9 - t1) * 10 + rnd(1, 9 - u1)]; }); // ثلاثة أرقام + ثلاثة أرقام
   }
   return out;
 }
@@ -40,8 +64,8 @@ function makeRounds(): Round[] {
 const PAD_X = [40, 63, 86]; // مواقع أوراق الإجابة (٪ من العرض)
 const START_X = 13;
 
-export default function FrogJump({ accent, accentDark, onDone }: FunGameProps) {
-  const rounds = useMemo(makeRounds, []);
+export default function FrogJump({ accent, accentDark, level, onDone }: FunGameProps) {
+  const rounds = useMemo(() => makeRounds(level), [level]);
   const e = useEngine({ total: rounds.length, onDone });
   const r = rounds[e.i];
   const [frogAt, setFrogAt] = useState<number | "start">("start");
@@ -75,7 +99,7 @@ export default function FrogJump({ accent, accentDark, onDone }: FunGameProps) {
     <div className="w-full flex flex-col gap-4">
       <Progress i={e.i} total={rounds.length} accent={accent} label="القفزة" />
       <Talk kind="frog" mood={e.mood} accentDark={accentDark}>
-        <p className="text-xs sm:text-sm text-ink-500 mb-1">ساعدي الضفدع ليقفز إلى الجواب الصحيح</p>
+        <p className="text-xs sm:text-sm text-ink-500 mb-1">ساعد الضفدع ليقفز إلى الجواب الصحيح</p>
         <p dir="ltr" className="text-2xl sm:text-3xl tracking-wide">
           {d(r.a)} + {d(r.b)} = {e.phase === "right" ? d(r.ans) : "؟"}
         </p>

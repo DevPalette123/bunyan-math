@@ -196,13 +196,13 @@ export type QuizAttemptQuestionRow = {
 
 // «ألعب» — كتالوج الألعاب ومحاولاتها. عمود answer_key (الإجابة الصحيحة) محجوب عن
 // المتصفح بصلاحيات الأعمدة، وجدول game_questions (البنك) غير مقروء للمتصفح كليًا؛
-// لذلك لا يظهر أيٌّ منهما هنا. لا تستعملي select("*") على game_attempt_questions.
+// لذلك لا يظهر أيٌّ منهما هنا. لا تستعمل select("*") على game_attempt_questions.
 export type PlayGameRow = {
   id: string;
   title: string;
   skill: string;
   /** هل تُمنح نجوم لهذه اللعبة؟ إن نعم: النجوم = عدد الإجابات الصحيحة، في أول
-   *  محاولة مكتملة فقط لهذه الطالبة في هذه اللعبة (وليس يوميًا كـ«اختبر»). */
+   *  محاولة مكتملة فقط لهذا الطالب في هذه اللعبة (وليس يوميًا كـ«اختبر»). */
   reward_enabled: boolean;
   reward_min_percentage: number;
   enabled: boolean;

@@ -1,6 +1,6 @@
 // نتائج ألعاب «ألعب» الجديدة (data/funGames.ts): تُحفَظ عبر دالة الخادم
-// record_fun_game_result (انظر supabase/phase8-fun-games.sql) وتُقرأ للمعلمة
-// من جدول fun_game_results — قراءة فقط، والمعلمة لا تلعب.
+// record_fun_game_result (انظر supabase/phase8-fun-games.sql) وتُقرأ للمعلم
+// من جدول fun_game_results — قراءة فقط، والمعلم لا تلعب.
 
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import type { FunGameId } from "../data/funGames";
@@ -24,7 +24,7 @@ export async function recordFunGameResult(
 }
 
 /**
- * أفضل نتيجة (١–٣ نجوم) لكل لعبة للطالبة الحالية فقط، من جدول fun_game_results.
+ * أفضل نتيجة (١–٣ نجوم) لكل لعبة للطالب الحالية فقط، من جدول fun_game_results.
  * الألعاب التي لم تُلعب بعد لا تظهر في الناتج (أي أن أفضل نتيجة لها ٠).
  * يعيد null عند تعذّر الجلب، ليعرض المستدعي ٠ نجوم بدل أي قيمة قديمة.
  */
@@ -56,7 +56,7 @@ export interface TeacherFunRow {
   bestStars: number;
 }
 
-/** لكل طالبة ولكل لعبة: عدد مرات اللعب وآخر نتيجة وأفضل نجوم — صفوف حقيقية فقط. */
+/** لكل طالب ولكل لعبة: عدد مرات اللعب وآخر نتيجة وأفضل نجوم — صفوف حقيقية فقط. */
 export async function fetchClassFunOverview(
   studentIds: string[]
 ): Promise<Map<string, Partial<Record<FunGameId, TeacherFunRow>>>> {
@@ -102,7 +102,7 @@ export interface FunHistoryItem {
   playedAt: string;
 }
 
-/** آخر ٢٠ لعبة لطالبة في لعبة واحدة (الأحدث أولًا). */
+/** آخر ٢٠ لعبة لطالب في لعبة واحدة (الأحدث أولًا). */
 export async function fetchStudentFunHistory(studentId: string, gameId: FunGameId): Promise<FunHistoryItem[]> {
   if (!isSupabaseConfigured) return [];
   const { data } = await supabase

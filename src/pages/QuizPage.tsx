@@ -35,10 +35,10 @@ import { toArabicDigits } from "../utils/arabicNumerals";
 // «اختبر» — عشر أسئلة بنفس مهارات ومستوى «اكتشف» لكن بأرقام جديدة في كل مرة،
 // بلا رفع في الجمع ولا استلاف في الطرح. على نفس نظام «اكتشف»: الأسئلة
 // والإجابات الصحيحة والنتيجة والنجوم والشارات كلها تُحسب في قاعدة البيانات،
-// والنتيجة تظهر لمعلمتك في لوحتها (انظر supabase/phase2-quiz-and-stars.sql).
+// والنتيجة تظهر لمعلمك في لوحتها (انظر supabase/phase2-quiz-and-stars.sql).
 //
 // فكرة التصميم: «بنيان» هو اسم المنصة، فكل إجابة صحيحة تضع طوبة في برج
-// يكبر أمام الطالبة. الخلفية أخضر النخيل العميق مع نقش نجمة ثمانية خافت،
+// يكبر أمام الطالب. الخلفية أخضر النخيل العميق مع نقش نجمة ثمانية خافت،
 // والأرقام بخط كوفي (Reem Kufi) ليختلف الإحساس عن باقي المنصة الفاتح.
 
 type Phase = "loading" | "intro" | "playing" | "submitting" | "result" | "error" | "unavailable";
@@ -101,8 +101,8 @@ export default function QuizPage() {
   // ------------------------------------------------------------------
   // الإقلاع: استئناف محاولة مفتوحة (تتحمّل تحديث الصفحة) أو عرض المقدمة.
   // ------------------------------------------------------------------
-  // يعتمد على رقم الطالبة (نص ثابت) لا على كائن profile نفسه: لو أعاد AuthContext
-  // إنشاء الكائن (تجديد الجلسة مثلًا) فلا يجوز أن يُعاد الإقلاع وتُرمى الطالبة
+  // يعتمد على رقم الطالب (نص ثابت) لا على كائن profile نفسه: لو أعاد AuthContext
+  // إنشاء الكائن (تجديد الجلسة مثلًا) فلا يجوز أن يُعاد الإقلاع وتُرمى الطالب
   // من منتصف الاختبار أو من شاشة النتيجة إلى المقدمة.
   const studentId = profile?.id;
 
@@ -171,7 +171,7 @@ export default function QuizPage() {
 
     if ("error" in saved) {
       // لم تُحفظ: تبقى الخيارات قابلة للنقر ولا يُشغَّل أي صوت (لا نتيجة حقيقية بعد).
-      setAnswerError("حدث خطأ أثناء حفظ إجابتك. اضغطي على الإجابة مرة أخرى للمحاولة من جديد.");
+      setAnswerError("حدث خطأ أثناء حفظ إجابتك. اضغط على الإجابة مرة أخرى للمحاولة من جديد.");
       return;
     }
 
@@ -200,10 +200,10 @@ export default function QuizPage() {
     const { error } = await completeQuizAttempt(attemptId);
     const data = error ? null : await fetchQuizResult(attemptId);
     if (!data) {
-      // لا نترك الطالبة أمام شاشة فارغة: النداء آمن للتكرار (الخادم يتجاهل
+      // لا نترك الطالب أمام شاشة فارغة: النداء آمن للتكرار (الخادم يتجاهل
       // إنهاء محاولة مكتملة)، فنسمح لها بإعادة المحاولة.
       finishingRef.current = false;
-      setFinishError("تعذّر حفظ نتيجتك. تأكدي من الاتصال بالإنترنت ثم حاولي مرة أخرى.");
+      setFinishError("تعذّر حفظ نتيجتك. تأكد من الاتصال بالإنترنت ثم حاول مرة أخرى.");
       setPhase("error");
       return;
     }
@@ -283,7 +283,7 @@ export default function QuizPage() {
           onClick={() => attempt && void finishAttempt(attempt.attemptId)}
           className="rounded-2xl bg-sun-400 hover:bg-sun-500 border-b-[6px] border-sun-600 active:translate-y-[3px] active:border-b-[3px] text-ink-900 font-extrabold text-base px-8 py-3 transition-[transform,background-color]"
         >
-          حاولي مرة أخرى
+          حاول مرة أخرى
         </button>
       </div>
     );
@@ -316,7 +316,7 @@ export default function QuizPage() {
           />
           <div className="flex flex-col gap-2.5">
             <h1 className="font-kufi font-bold text-3xl sm:text-4xl text-mortar leading-snug text-balance">
-              ابني برجك طوبة بعد طوبة
+              ابنِ برجك طوبة بعد طوبة
             </h1>
             <p className="text-sm sm:text-base font-medium text-mortar/80 leading-relaxed max-w-sm mx-auto">
               كل إجابة صحيحة تضع طوبة جديدة في برجك. عشرة أسئلة من ثماني مهارات، وأرقامها جديدة في كل مرة.
@@ -346,7 +346,7 @@ export default function QuizPage() {
             disabled={starting}
             className="w-full max-w-xs flex items-center justify-center gap-2 rounded-2xl bg-sun-400 hover:bg-sun-500 border-b-[6px] border-sun-600 active:translate-y-[3px] active:border-b-[3px] disabled:opacity-60 disabled:pointer-events-none text-ink-900 font-extrabold text-lg px-8 py-4 transition-[transform,background-color] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-mortar focus-visible:outline-offset-2"
           >
-            {starting ? "جارٍ تجهيز الأسئلة..." : "ابدئي الاختبار"}
+            {starting ? "جارٍ تجهيز الأسئلة..." : "ابدأ الاختبار"}
             {!starting && <ChevronIcon className="w-5 h-5 rotate-180" />}
           </button>
         </div>
@@ -388,7 +388,7 @@ export default function QuizPage() {
           justPlacedIndex={justPlaced}
           flag="dim"
           className="w-full max-w-[210px] sm:max-w-[240px] h-auto"
-          label={`بنيتِ ${toArabicDigits(correctSoFar)} طوبات من ${toArabicDigits(total)}`}
+          label={`بنيت ${toArabicDigits(correctSoFar)} طوبات من ${toArabicDigits(total)}`}
         />
 
         {/* key: تُعاد الحركة والحالة كاملة مع كل سؤال جديد */}
@@ -410,7 +410,7 @@ export default function QuizPage() {
             (question.isCorrect ? (
               <p className="flex items-center gap-2 text-sm font-extrabold text-palm-100 animate-rise-in">
                 <CheckCircleIcon className="w-5 h-5 text-palm-400" />
-                أحسنتِ! وُضعت طوبة جديدة في برجك
+                أحسنت! وُضعت طوبة جديدة في برجك
               </p>
             ) : (
               <p className="text-sm font-extrabold text-rose-400 animate-rise-in">

@@ -158,7 +158,7 @@ export default function GamePage() {
     setPendingAnswer(null);
 
     if ("error" in saved) {
-      setAnswerError("حدث خطأ أثناء حفظ إجابتك. اضغطي على الإجابة مرة أخرى للمحاولة من جديد.");
+      setAnswerError("حدث خطأ أثناء حفظ إجابتك. اضغط على الإجابة مرة أخرى للمحاولة من جديد.");
       return;
     }
 
@@ -191,7 +191,7 @@ export default function GamePage() {
     const data = error ? null : await fetchGameResult(attemptId);
     if (!data) {
       finishingRef.current = false;
-      setFinishError("تعذّر حفظ نتيجتك. تأكدي من الاتصال بالإنترنت ثم حاولي مرة أخرى.");
+      setFinishError("تعذّر حفظ نتيجتك. تأكد من الاتصال بالإنترنت ثم حاول مرة أخرى.");
       setPhase("error");
       return;
     }
@@ -307,7 +307,7 @@ export default function GamePage() {
           style={{ backgroundColor: theme.scene.accent, borderColor: theme.scene.accentDark }}
           className="rounded-2xl border-b-[6px] active:translate-y-[3px] active:border-b-[3px] text-white font-extrabold text-base px-8 py-3 transition-[transform,background-color]"
         >
-          حاولي مرة أخرى
+          حاول مرة أخرى
         </button>
       </div>
     );
@@ -350,7 +350,7 @@ export default function GamePage() {
           results={results}
           currentIndex={index}
           color={theme.scene.gem}
-          label={`جمعتِ ${toArabicDigits(results.filter((r) => r === true).length)} جواهر من ${toArabicDigits(total)}`}
+          label={`جمعت ${toArabicDigits(results.filter((r) => r === true).length)} جواهر من ${toArabicDigits(total)}`}
         />
 
         <Mascot theme={theme} mood={mood} className="w-24 h-24 sm:w-28 sm:h-28" />

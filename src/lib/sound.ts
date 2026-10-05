@@ -244,7 +244,7 @@ export function playNextTickSound(): void {
 
 /**
  * نهاية الاختبار. celebrate = true (٧٠٪ فأكثر): فاصل احتفالي بخمس نغمات.
- * غير ذلك: ثلاث نغمات دافئة مشجّعة — لا شيء يُشعر الطالبة بالفشل.
+ * غير ذلك: ثلاث نغمات دافئة مشجّعة — لا شيء يُشعر الطالب بالفشل.
  */
 export function playQuizFinishSound(celebrate: boolean): void {
   const ctx = getAudioContext();

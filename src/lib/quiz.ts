@@ -1,7 +1,7 @@
 // «اختبر» — الجانب البرمجي للواجهة. الأسئلة والإجابات الصحيحة والنتيجة والنجوم
 // كلها تُحسب في قاعدة البيانات (انظر supabase/phase2-quiz-and-stars.sql) تمامًا
 // كما في «اكتشف»؛ هذا الملف لا يولّد سؤالًا ولا يحسب درجة، ولا يرى الإجابة
-// الصحيحة لأي سؤال قبل أن تجيب عنه الطالبة.
+// الصحيحة لأي سؤال قبل أن تجيب عنه الطالب.
 //
 // ⚠️ الاستعلامات على quiz_attempt_questions تذكر الأعمدة صراحةً: عمود
 // answer_key محجوب عن المتصفح بصلاحيات الأعمدة، وأي select("*") سيفشل.
@@ -42,7 +42,7 @@ export interface QuizQuestion {
   text: string;
   options: string[];
   selectedAnswer: string | null;
-  /** null حتى تجيب الطالبة على هذا السؤال (أو تنتهي المحاولة). */
+  /** null حتى تجيب الطالب على هذا السؤال (أو تنتهي المحاولة). */
   correctAnswer: string | null;
   isCorrect: boolean | null;
 }
@@ -120,7 +120,7 @@ async function loadQuestions(attemptId: string): Promise<QuizQuestion[]> {
 }
 
 // ---------------------------------------------------------------------------
-// مسار الطالبة
+// مسار الطالب
 // ---------------------------------------------------------------------------
 
 /** يبدأ محاولة جديدة (أو يستأنف المفتوحة إن وُجدت — الخادم يقرر). */
@@ -222,7 +222,7 @@ export async function fetchQuizResult(
   };
 }
 
-/** لبطاقة «النشاط الأخير» في رئيسية الطالبة: آخر محاولة مكتملة فقط، بلا اختلاق. */
+/** لبطاقة «النشاط الأخير» في رئيسية الطالب: آخر محاولة مكتملة فقط، بلا اختلاق. */
 export async function fetchLatestQuizSummary(
   studentId: string
 ): Promise<{ attemptId: string; completedAt: string; percentage: number } | null> {
@@ -244,7 +244,7 @@ export async function fetchLatestQuizSummary(
 }
 
 // ---------------------------------------------------------------------------
-// مسار المعلمة
+// مسار المعلم
 // ---------------------------------------------------------------------------
 
 export interface TeacherQuizRow {
@@ -256,14 +256,14 @@ export interface TeacherQuizRow {
   totalQuestions: number;
   completedAt: string;
   weakSkills: SkillCode[];
-  /** كل المحاولات المكتملة لهذه الطالبة (وليس آخرها فقط). */
+  /** كل المحاولات المكتملة لهذا الطالب (وليس آخرها فقط). */
   attemptsCount: number;
   bestPercentage: number;
   averagePercentage: number;
 }
 
-/** آخر محاولة مكتملة لكل طالبة + عدد المحاولات وأفضل نسبة ومتوسطها — صفوف
- *  حقيقية فقط، لا شيء للطالبات اللواتي لم يجرين الاختبار. */
+/** آخر محاولة مكتملة لكل طالب + عدد المحاولات وأفضل نسبة ومتوسطها — صفوف
+ *  حقيقية فقط، لا شيء للطلاب الذين لم يجروا الاختبار. */
 export async function fetchClassQuizOverview(studentIds: string[]): Promise<Map<string, TeacherQuizRow>> {
   if (studentIds.length === 0) return new Map();
 
@@ -314,7 +314,7 @@ export interface TeacherQuizDetail {
   completedAt: string;
   startedAt: string;
   skills: SkillBreakdownItem[];
-  /** أسئلة آخر محاولة التي أخطأت فيها الطالبة، بنص السؤال والإجابتين. */
+  /** أسئلة آخر محاولة التي أخطأت فيها الطالب، بنص السؤال والإجابتين. */
   mistakes: QuizReviewItem[];
   /** آخر محاولات مكتملة (الأحدث أولًا) لرؤية التطور. */
   history: { attemptId: string; completedAt: string; percentage: number }[];

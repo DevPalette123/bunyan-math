@@ -6,7 +6,7 @@ import { CheckCircleIcon, XCircleIcon } from "../icons/Glyphs";
 
 interface QuizQuestionProps {
   question: QuizQuestionData;
-  /** null حتى تجيب الطالبة على هذا السؤال وتُحفظ إجابتها. */
+  /** null حتى تجيب الطالب على هذا السؤال وتُحفظ إجابتها. */
   selectedAnswer: string | null;
   /** الخيار الذي أُرسل للحفظ ولم يعد جوابه بعد (لحظة الانتظار القصيرة). */
   pendingAnswer?: string | null;
@@ -20,7 +20,7 @@ interface QuizQuestionProps {
  * في السؤال يظهر العدد الأول على اليمين والثاني على اليسار (اتجاه القراءة).
  * فإذا كان الأول أصغر (القيمة "<") فالأكبر على اليسار، وفم العلامة يجب أن
  * يفتح نحو الأكبر — أي نحو اليسار — فيكون الشكل المرسوم ">" . والعكس صحيح.
- * هذا يطابق ما يعرضه «اكتشف» للطالبة.
+ * هذا يطابق ما يعرضه «اكتشف» للطالب.
  */
 export function signGlyph(value: string): string {
   if (value === "<") return ">";
@@ -54,7 +54,7 @@ export default function QuizQuestion({
   onSelect,
 }: QuizQuestionProps) {
   const revealed = selectedAnswer !== null;
-  // الإجابة الصحيحة لا تصل المتصفح إلا بعد أن تجيب الطالبة (من الخادم).
+  // الإجابة الصحيحة لا تصل المتصفح إلا بعد أن تجيب الطالب (من الخادم).
   const correctAnswer = question.correctAnswer;
   const saving = pendingAnswer !== null;
   const wasCorrect = revealed && selectedAnswer === correctAnswer;
@@ -85,7 +85,7 @@ export default function QuizQuestion({
               tone = "bg-rose-50 border-rose-400 text-rose-600 animate-shake";
               icon = <XCircleIcon className="w-6 h-6 text-rose-500" />;
             } else if (isRightOption) {
-              // بعد الخطأ نُظهر الجواب الصحيح لتتعلّم الطالبة منه.
+              // بعد الخطأ نُظهر الجواب الصحيح لتتعلّم الطالب منه.
               tone = "bg-palm-50 border-palm-400 text-palm-700";
               icon = <CheckCircleIcon className="w-6 h-6 text-palm-500" />;
             } else {

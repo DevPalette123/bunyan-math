@@ -1,6 +1,6 @@
 // supabase/functions/demo-start/index.ts
 //
-// «تجربة المعلمة / تجربة الطالبة» من صفحة الدخول. تُستدعى بلا تسجيل دخول.
+// «تجربة المعلم / تجربة الطالب» من صفحة الدخول. تُستدعى بلا تسجيل دخول.
 // تقبل فقط { role: "teacher" | "student", token?: string } — لا بريدًا ولا معرّف مستخدم،
 // وتختار الحساب من جدول demo_accounts فقط، فلا يمكنها إصدار جلسة لحساب حقيقي أبدًا.
 //
@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     const { data: allowed } = await admin.rpc("demo_rate_hit", {
       p_key: "start:" + (await sha256Hex(ip)), p_limit: 60, p_window_seconds: 600,
     });
-    if (allowed === false) return json({ error: "محاولات كثيرة، انتظري قليلًا ثم أعيدي المحاولة." }, 429);
+    if (allowed === false) return json({ error: "محاولات كثيرة، انتظر قليلًا ثم أعد المحاولة." }, 429);
 
     const newToken = randomToken(32);
     const claim = async () => {
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     let claimed = await claim();
     if (!claimed) {
       if (Number(counts.total) >= Number(counts.max_slots)) {
-        return json({ error: "التجربة مزدحمة الآن، حاولي بعد دقائق قليلة." }, 503);
+        return json({ error: "التجربة مزدحمة الآن، حاول بعد دقائق قليلة." }, 503);
       }
       try {
         await provisionSlot(admin);
@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
         throw new StepError("provision", e instanceof Error ? e.message : String(e), 500);
       }
       claimed = await claim();
-      if (!claimed) return json({ error: "تعذّر تجهيز التجربة، حاولي مرة أخرى." }, 503);
+      if (!claimed) return json({ error: "تعذّر تجهيز التجربة، حاول مرة أخرى." }, 503);
     }
 
     const { data: account } = await admin
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
     if (!prof || prof.role !== role) {
       console.error(`[demo-start] تصحيح profiles.role: الحالي=${prof?.role ?? "لا صف"} المطلوب=${role} user=${account.user_id}`);
       const { error: fixErr } = await admin.from("profiles").upsert(
-        { id: account.user_id, role, full_name: role === "teacher" ? "معلمة تجريبية" : "سارة أحمد" },
+        { id: account.user_id, role, full_name: role === "teacher" ? "معلم تجريبي" : "سارة أحمد" },
         { onConflict: "id" },
       );
       if (fixErr) throw new StepError("account", `profiles fix: ${fixErr.message}`);

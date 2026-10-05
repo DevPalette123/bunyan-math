@@ -45,7 +45,7 @@ export default function LessonDetailPage() {
     if (error) {
       // Not saved — completed/justCompleted stay false, so the badge still
       // honestly reads "غير مكتمل" and the celebratory line never shows.
-      setCompletionError("حدث خطأ أثناء حفظ إنجاز هذا الدرس. اضغطي «إعادة المحاولة».");
+      setCompletionError("حدث خطأ أثناء حفظ إنجاز هذا الدرس. اضغط «إعادة المحاولة».");
       return;
     }
 
@@ -114,7 +114,7 @@ export default function LessonDetailPage() {
 
         {justCompleted && (
           <p className="text-sm font-extrabold text-palm-600 animate-pop-in">
-            أحسنتِ! أكملتِ هذا الدرس وحصلتِ على نقاطك. ⭐
+            أحسنت! أكملت هذا الدرس وحصلت على نقاطك. ⭐
           </p>
         )}
 

@@ -10,7 +10,7 @@ export const LEVEL_CLASS: Record<string, string> = {
   "يحتاج إلى تأسيس": "bg-rose-50 text-rose-500",
 };
 
-/** بطاقة نتيجة طالبة: حلقة نسبة + اسم + مستوى + زر التفاصيل. */
+/** بطاقة نتيجة طالب: حلقة نسبة + اسم + مستوى + زر التفاصيل. */
 export default function ResultCard({
   name,
   meta,

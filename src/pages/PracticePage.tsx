@@ -31,7 +31,7 @@ export default function PracticePage() {
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-900">تدرّب</h1>
           <p className="text-sm sm:text-base font-bold text-ink-500">
-            اختاري مهارة وابدئي بحل تمارينها
+            اختر مهارة وابدأ بحل تمارينها
           </p>
         </section>
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// تشخيص «تجربة المعلمة/الطالبة» من جهازكِ: node scripts/diagnose-demo.mjs
+// تشخيص «تجربة المعلم/الطالب» من جهازك: node scripts/diagnose-demo.mjs
 // يقرأ VITE_SUPABASE_URL و VITE_SUPABASE_ANON_KEY من ملف .env (المفتاح العام فقط — لا service-role)
 // ويفحص بالترتيب: demo_status، ثم وجود دالة demo-start وردّها الفعلي، ويشرح السبب بالعربية.
 // تنبيه: الفحص الأخير يستدعي demo-start فعلًا؛ إن كانت تعمل فسيُجهَّز Slot تجريبي (لا يمس أي بيانات حقيقية).
@@ -37,22 +37,22 @@ const st = await call("/rest/v1/rpc/demo_status", { method: "POST", body: "{}" }
 console.log(`\n1) demo_status → HTTP ${st.status}: ${show(st.body)}`);
 if (st.status === 404) console.log("   ✗ الدالة غير موجودة: لم يُشغَّل supabase/phase10-demo-mode.sql.");
 else if (st.body === true) console.log("   ✓ التجربة مفعّلة في قاعدة البيانات.");
-else if (st.body === false) console.log("   ✗ معطّلة: شغّلي  update public.demo_settings set enabled = true;");
+else if (st.body === false) console.log("   ✗ معطّلة: شغّل  update public.demo_settings set enabled = true;");
 
 // 2) demo-start
 const ds = await call("/functions/v1/demo-start", { method: "POST", body: JSON.stringify({ role: "teacher" }) });
 console.log(`\n2) demo-start → HTTP ${ds.status}: ${show(ds.body)}`);
 const msg = typeof ds.body === "string" ? ds.body : `${ds.body?.code ?? ""} ${ds.body?.message ?? ""} ${ds.body?.error ?? ""}`;
 if (ds.status === 200 && ds.body?.token_hash) {
-  console.log("   ✓ الدالة منشورة وتعمل وأعادت رمز دخول. المشكلة (إن بقيت) في المتصفح: افتحي Console وانظري [demo].");
+  console.log("   ✓ الدالة منشورة وتعمل وأعادت رمز دخول. المشكلة (إن بقيت) في المتصفح: افتح Console وانظر [demo].");
 } else if (ds.status === 404 || /NOT_FOUND|not found/i.test(msg)) {
   console.log("   ✗ الدالة غير منشورة. نفّذي:  supabase functions deploy demo-start --no-verify-jwt");
 } else if (ds.status === 401 || /jwt/i.test(msg)) {
-  console.log("   ✗ البوابة رفضت الطلب (JWT). أعيدي النشر بهذا الخيار:  supabase functions deploy demo-start --no-verify-jwt");
+  console.log("   ✗ البوابة رفضت الطلب (JWT). أعد النشر بهذا الخيار:  supabase functions deploy demo-start --no-verify-jwt");
 } else if (ds.status === 403) {
   console.log("   ✗ التجربة معطّلة داخل الدالة (demo_settings.enabled = false).");
 } else if (ds.status >= 500 || ds.status === 503) {
-  console.log(`   ✗ خطأ داخل الدالة (الخطوة: ${ds.body?.step ?? "؟"}). افتحي Supabase ← Edge Functions ← demo-start ← Logs وأرسلي لي آخر خطأ.`);
+  console.log(`   ✗ خطأ داخل الدالة (الخطوة: ${ds.body?.step ?? "؟"}). افتح Supabase ← Edge Functions ← demo-start ← Logs وأرسلي لي آخر خطأ.`);
   console.log("     (الأخطاء المتوقعة هنا: فشل demo_seed_slot، أو إنشاء مستخدم، أو generateLink.)");
 } else {
   console.log("   ؟ ردّ غير متوقع — أرسلي لي المخرجات كاملة.");

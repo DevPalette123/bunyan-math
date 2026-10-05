@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { PlayGame } from "../../data/playGames";
-import { findFunGame } from "../../data/funGames";
+import { findFunGame, hasLevels } from "../../data/funGames";
 import { ChevronIcon, PlayGameIcon } from "../icons/Glyphs";
 
 interface GameCardProps {
   game: PlayGame;
-  /** أفضل نتيجة (٠–٣) للطالبة الحالية في هذه اللعبة، تأتي من قاعدة البيانات عبر PlayPage. */
+  /** أفضل نتيجة (٠–٣) للطالب الحالية في هذه اللعبة، تأتي من قاعدة البيانات عبر PlayPage. */
   best?: number;
 }
 
@@ -19,7 +19,7 @@ export default function GameCard({ game, best = 0 }: GameCardProps) {
   // الألعاب المبنية داخل المنصة (مغامرة الجمع/الطرح الآن، وأي لعبة تُضاف
   // لاحقًا بنفس محرّك GamePage) تُفتح كصفحة داخلية، لا كملف HTML خارجي.
   // لكل مهارة الآن لعبة بفكرة مختلفة (data/funGames.ts). لإعادة اللعبة القديمة
-  // (سؤال فأربع خيارات المرتبطة بقاعدة البيانات) استبدلي المسار بـ `/play/${game.id}`.
+  // (سؤال فأربع خيارات المرتبطة بقاعدة البيانات) استبدل المسار بـ `/play/${game.id}`.
   const fun = findFunGame(game.id);
 
   async function handleOpen() {
@@ -82,6 +82,11 @@ export default function GameCard({ game, best = 0 }: GameCardProps) {
             <span aria-hidden="true">{fun.emoji} </span>
             {fun.title}
           </span>
+          {hasLevels(game.id) && (
+            <span className="text-[10px] sm:text-[11px] font-extrabold text-palm-600 bg-palm-50 rounded-full px-2.5 py-0.5">
+              ٣ مستويات
+            </span>
+          )}
           <span className="text-xs tracking-widest -mt-1" aria-label={`أفضل نتيجة ${best} من ٣ نجوم`}>
             {[1, 2, 3].map((n) => (
               <span key={n} className={n <= best ? "" : "opacity-20 grayscale"}>

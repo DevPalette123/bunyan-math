@@ -65,7 +65,7 @@ export function playGameNextSound(): void {
 
 /**
  * إكمال اللعبة. celebrate = true (٧٠٪ فأكثر): فاصل احتفالي بست نغمات ولمعة عالية.
- * غير ذلك: أربع نغمات دافئة مشجّعة — لا شيء يُشعر الطالبة بالفشل.
+ * غير ذلك: أربع نغمات دافئة مشجّعة — لا شيء يُشعر الطالب بالفشل.
  */
 export function playGameFinishSound(celebrate: boolean): void {
   const ctx = getAudioContext();

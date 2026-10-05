@@ -22,7 +22,7 @@ export default function NumberLineVisual({ visual, theme, revealed, correctAnswe
   return (
     <div dir="rtl" className="w-full flex flex-col items-center gap-5">
       <p className="text-sm sm:text-base font-extrabold text-ink-500">
-        قرّبي العدد <span style={{ color: theme.scene.accentDark }}>{toArabicDigits(value)}</span> لأقرب{" "}
+        قرّب العدد <span style={{ color: theme.scene.accentDark }}>{toArabicDigits(value)}</span> لأقرب{" "}
         {unit === 10 ? "عشرة" : "مئة"}
       </p>
 

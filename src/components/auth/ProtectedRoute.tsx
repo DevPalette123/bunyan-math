@@ -47,8 +47,8 @@ export default function ProtectedRoute({ allowedRoles, children }: ProtectedRout
           </p>
           <p className="text-xs text-ink-500 leading-relaxed">
             {session.user.app_metadata?.demo === true
-              ? "تُنظَّف التجارب الخاملة تلقائيًا. سجّلي الخروج وابدئي تجربة جديدة من صفحة الدخول."
-              : "تحقّقي من الاتصال ثم أعيدي المحاولة، أو سجّلي الخروج وادخلي من جديد."}
+              ? "تُنظَّف التجارب الخاملة تلقائيًا. سجّل الخروج وابدأ تجربة جديدة من صفحة الدخول."
+              : "تحقّق من الاتصال ثم أعد المحاولة، أو سجّل الخروج وادخل من جديد."}
           </p>
           <button
             type="button"

@@ -4,7 +4,7 @@ import { rnd } from "./funUtils";
 import Critter from "./kit/Critters";
 import { Choice, Progress, Stage, Talk } from "./kit/ui";
 import { useEngine } from "./kit/useEngine";
-import type { FunGameProps } from "./types";
+import type { FunGameProps, FunLevel } from "./types";
 
 // التقريب: الكرة على قمّة التلّ تتدحرج نحو أقرب عشرة (أو مئة).
 interface Round {
@@ -15,25 +15,43 @@ interface Round {
   ans: number;
 }
 
-function makeRounds(): Round[] {
+// المستويات: ١ مبتدئ (عدد من رقم واحد ← أقرب عشرة) · ٢ متوسط (عدد من رقمين ← أقرب عشرة)
+// · ٣ متقدم (ثلاثة أرقام ← أقرب عشرة ثم أقرب مئة). ٦ جولات في كل مستوى، بعضها أقل من
+// المنتصف وبعضها أكبر منه وواحدة عند المنتصف تمامًا.
+function makeRounds(level: FunLevel): Round[] {
   const out: Round[] = [];
   const mk = (n: number, unit: 10 | 100) => {
     const lo = Math.floor(n / unit) * unit;
     const hi = lo + unit;
     out.push({ n, unit, lo, hi, ans: n - lo >= unit / 2 ? hi : lo });
   };
-  const tens = [rnd(11, 34), rnd(36, 49), 10 * rnd(5, 8) + 5, rnd(61, 89)];
-  tens
-    .map((n) => (n % 10 === 0 ? n + 3 : n))
-    .sort(() => Math.random() - 0.5)
-    .forEach((n) => mk(n, 10));
-  mk(rnd(1, 8) * 100 + rnd(10, 45), 100);
-  mk(rnd(1, 8) * 100 + rnd(55, 95), 100);
+  const mix = (items: Round[]) => items.sort(() => Math.random() - 0.5);
+  const keep = () => {
+    const made = out.splice(0, out.length);
+    mix(made).forEach((r) => out.push(r));
+  };
+
+  if (level === 1) {
+    // ٣ أعداد قبل المنتصف (١–٤) و٣ عند المنتصف وبعده (٥–٩)
+    const low = [1, 2, 3, 4].sort(() => Math.random() - 0.5).slice(0, 3);
+    const high = [5, 6, 7, 8, 9].sort(() => Math.random() - 0.5).slice(0, 3);
+    [...low, ...high].forEach((n) => mk(n, 10));
+  } else if (level === 2) {
+    const t = () => rnd(1, 8) * 10;
+    [t() + rnd(1, 4), t() + rnd(1, 4), t() + rnd(1, 4), t() + 5, t() + rnd(6, 9), t() + rnd(6, 9)].forEach((n) => mk(n, 10));
+  } else {
+    const h = () => rnd(1, 8) * 100;
+    // ٣ جولات لأقرب عشرة
+    [h() + rnd(1, 9) * 10 + rnd(1, 4), h() + rnd(1, 9) * 10 + 5, h() + rnd(1, 9) * 10 + rnd(6, 9)].forEach((n) => mk(n, 10));
+    // ٣ جولات لأقرب مئة
+    [h() + rnd(10, 45), h() + 50, h() + rnd(55, 95)].forEach((n) => mk(n, 100));
+  }
+  keep();
   return out;
 }
 
-export default function RoundHill({ accent, accentDark, onDone }: FunGameProps) {
-  const rounds = useMemo(makeRounds, []);
+export default function RoundHill({ accent, accentDark, level, onDone }: FunGameProps) {
+  const rounds = useMemo(() => makeRounds(level), [level]);
   const e = useEngine({ total: rounds.length, onDone, advanceMs: 1700 });
   const r = rounds[e.i];
   const rolled = e.phase === "right" ? (e.picked === r.lo ? "lo" : "hi") : null;
@@ -50,7 +68,7 @@ export default function RoundHill({ accent, accentDark, onDone }: FunGameProps) 
       <Talk kind="ball" mood={e.mood} accentDark={accentDark}>
         <p className="text-xs sm:text-sm text-ink-500 mb-1">إلى أي عدد ستتدحرج الكرة؟</p>
         <p className="text-lg sm:text-xl">
-          قرّبي <span className="text-2xl">{d(r.n)}</span> إلى أقرب {unitWord}
+          قرّب <span className="text-2xl">{d(r.n)}</span> إلى أقرب {unitWord}
         </p>
       </Talk>
 

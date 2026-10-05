@@ -104,7 +104,7 @@ function localInputToIso(v: string): string | null {
   return v ? new Date(v).toISOString() : null;
 }
 
-// ---------- قائمة مسابقات المعلمة (مع عدد المشاركين الحقيقي) ----------
+// ---------- قائمة مسابقات المعلم (مع عدد المشاركين الحقيقي) ----------
 export interface CompetitionSummary {
   id: string; slug: string; title: string; description: string | null; status: CompetitionStatus; theme: ThemeId;
   created_at: string; participants: number;
@@ -284,7 +284,7 @@ export async function uploadMedia(competitionId: string, kind: "image" | "video"
   if (file.size > MAX_UPLOAD_BYTES) throw new Error("حجم الملف أكبر من ٥٠ ميجابايت.");
   const { data: u } = await db.auth.getUser();
   const uid = u.user?.id;
-  if (!uid) throw new Error("انتهت الجلسة، سجّلي الدخول من جديد.");
+  if (!uid) throw new Error("انتهت الجلسة، سجّل الدخول من جديد.");
   const path = `${uid}/${competitionId}/${newId()}.${EXT_BY_MIME[file.type]}`;
   const { error } = await db.storage.from(MEDIA_BUCKET).upload(path, file, { contentType: file.type, upsert: false });
   if (error) throw error;
@@ -355,7 +355,7 @@ export async function submitCompetition(
   return data as SubmitResult;
 }
 
-// ---------- نتائج المعلمة ----------
+// ---------- نتائج المعلم ----------
 export interface SubmissionRow {
   id: string; participant_name: string; grade_label: string; score: number; max_score: number;
   correct_count: number; question_count: number; submitted_at: string; duration_seconds: number | null; timed_out: boolean;
@@ -426,8 +426,8 @@ export function isHttpUrl(v: string): boolean {
 /** فحص الجاهزية للنشر — يُرجع قائمة مشكلات بالعربية (فارغة = جاهزة). */
 export function validateForPublish(c: DraftCompetition): string[] {
   const out: string[] = [];
-  if (!c.title.trim()) out.push("اكتبي اسم المسابقة.");
-  if (!c.pages.some((p) => p.items.length > 0)) out.push("أضيفي عنصرًا واحدًا على الأقل.");
+  if (!c.title.trim()) out.push("اكتب اسم المسابقة.");
+  if (!c.pages.some((p) => p.items.length > 0)) out.push("أضف عنصرًا واحدًا على الأقل.");
   if (c.starts_at && c.ends_at && new Date(c.ends_at) <= new Date(c.starts_at)) out.push("تاريخ النهاية يجب أن يكون بعد البداية.");
   let n = 0;
   c.pages.forEach((p, pi) => p.items.forEach((it) => {
@@ -451,15 +451,15 @@ export function validateForPublish(c: DraftCompetition): string[] {
       n += 1;
       const q = it.question;
       const w = `السؤال ${n}`;
-      if (!q.prompt.trim()) out.push(`${w}: اكتبي نص السؤال.`);
+      if (!q.prompt.trim()) out.push(`${w}: اكتب نص السؤال.`);
       if (q.qtype === "mcq") {
         const filled = q.options.filter((o) => o.label.trim());
         if (filled.length < 2) out.push(`${w}: خياران على الأقل.`);
-        if (!q.options.some((o) => o.is_correct && o.label.trim())) out.push(`${w}: حدّدي الإجابة الصحيحة.`);
+        if (!q.options.some((o) => o.is_correct && o.label.trim())) out.push(`${w}: حدّد الإجابة الصحيحة.`);
       }
-      if (q.qtype === "true_false" && q.tf_answer === null) out.push(`${w}: حدّدي هل العبارة صح أم خطأ.`);
+      if (q.qtype === "true_false" && q.tf_answer === null) out.push(`${w}: حدّد هل العبارة صح أم خطأ.`);
       if (q.qtype === "number" && !/^-?\d+(\.\d+)?$/.test(q.number_answer.trim())) out.push(`${w}: الإجابة الرقمية غير صحيحة.`);
-      if (q.qtype === "text" && !q.text_answers.some((a) => a.trim())) out.push(`${w}: أضيفي إجابة نصية صحيحة واحدة على الأقل.`);
+      if (q.qtype === "text" && !q.text_answers.some((a) => a.trim())) out.push(`${w}: أضف إجابة نصية صحيحة واحدة على الأقل.`);
     }
   }));
   return out;

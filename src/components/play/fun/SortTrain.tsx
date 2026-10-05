@@ -4,18 +4,25 @@ import { playGameCorrectSound, playGameWrongSound } from "../../../lib/playSound
 import { rnd, starsFor, uniq, wait } from "./funUtils";
 import { TrainEngine, type Mood } from "./kit/Critters";
 import { Bubble, Burst, Progress, Stage } from "./kit/ui";
-import type { FunGameProps } from "./types";
+import type { FunGameProps, FunLevel } from "./types";
 
-// الترتيب التصاعدي: كل عربة تنتظر عددها؛ اضغطي أصغر عدد متبقٍّ فينزلق إلى القطار.
+// الترتيب التصاعدي: كل عربة تنتظر عددها؛ اضغط أصغر عدد متبقٍّ فينزلق إلى القطار.
 const CAR_COLORS = ["#F0B94A", "#5BA9D6", "#A570C2", "#3E9C6B", "#E4526F"];
 
-function makeRounds(): number[][] {
+// المستويات: ١ مبتدئ (أعداد من رقم واحد) · ٢ متوسط (رقمان) · ٣ متقدم (ثلاثة أرقام).
+// ٣ جولات في كل مستوى: ٤ أعداد، ثم ٥ أعداد، ثم ٥ أعداد متقاربة (نفس خانة العشرات أو المئات).
+function makeRounds(level: FunLevel): number[][] {
+  if (level === 1) return [uniq(4, () => rnd(1, 9)), uniq(5, () => rnd(1, 9)), uniq(5, () => rnd(1, 9))];
+  if (level === 2) {
+    const base = rnd(1, 9) * 10;
+    return [uniq(4, () => rnd(10, 99)), uniq(5, () => rnd(10, 99)), uniq(5, () => base + rnd(0, 9))];
+  }
   const base = rnd(2, 8) * 100;
-  return [uniq(4, () => rnd(10, 99)), uniq(5, () => rnd(100, 999)), uniq(5, () => base + rnd(0, 99))];
+  return [uniq(4, () => rnd(100, 999)), uniq(5, () => rnd(100, 999)), uniq(5, () => base + rnd(0, 99))];
 }
 
-export default function SortTrain({ accent, accentDark, onDone }: FunGameProps) {
-  const rounds = useMemo(makeRounds, []);
+export default function SortTrain({ accent, accentDark, level, onDone }: FunGameProps) {
+  const rounds = useMemo(() => makeRounds(level), [level]);
   const [r, setR] = useState(0);
   const [placed, setPlaced] = useState<number[]>([]);
   const [wrong, setWrong] = useState<number | null>(null);
@@ -77,8 +84,8 @@ export default function SortTrain({ accent, accentDark, onDone }: FunGameProps) 
     <div className="w-full flex flex-col gap-4">
       <Progress i={r} total={rounds.length} accent={accent} label="القطار" />
       <Bubble accentDark={accentDark} tail={false}>
-        <p className="text-sm sm:text-base">رتّبي العربات من الأصغر إلى الأكبر</p>
-        <p className="text-xs text-ink-500 mt-0.5">اضغطي على أصغر عدد أولًا 🚂</p>
+        <p className="text-sm sm:text-base">رتّب العربات من الأصغر إلى الأكبر</p>
+        <p className="text-xs text-ink-500 mt-0.5">اضغط على أصغر عدد أولًا 🚂</p>
       </Bubble>
 
       <Stage className="pt-8 pb-3 px-2" style={{ background: "linear-gradient(180deg,#DDEFFA 0%,#FFF1DA 70%)" }}>

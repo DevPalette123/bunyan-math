@@ -4,7 +4,7 @@ import { rnd, uniq } from "./funUtils";
 import Critter from "./kit/Critters";
 import { Bubble, Burst, Progress, Stage } from "./kit/ui";
 import { useEngine } from "./kit/useEngine";
-import type { FunGameProps } from "./types";
+import type { FunGameProps, FunLevel } from "./types";
 
 // المقارنة: التمساح الجائع يلتهم العدد المطلوب (الأكبر أو الأصغر)، أو لا يأكل شيئًا إن تساويا.
 type Key = "a" | "b" | "eq";
@@ -24,7 +24,10 @@ function pair(lo: number, hi: number, gap?: number): [number, number] {
   return [x, y];
 }
 
-function makeRounds(): Round[] {
+// المستويات: ١ مبتدئ (رقم واحد) · ٢ متوسط (رقمان) · ٣ متقدم (ثلاثة أرقام).
+// ٦ جولات في كل مستوى بنفس النمط: عددان متباعدان (الأكبر ثم الأصغر)، عددان أقرب، عددان
+// متساويان، وعددان متجاوران جدًا. تتغيّر أحجام الأعداد والفروق فقط.
+function makeRounds(level: FunLevel): Round[] {
   const mk = (a: number, b: number, mode: "big" | "small"): Round => ({
     a,
     b,
@@ -32,10 +35,32 @@ function makeRounds(): Round[] {
     ans: a === b ? "eq" : (mode === "big" ? a > b : a < b) ? "a" : "b",
   });
   const flip = (p: [number, number]): [number, number] => (Math.random() < 0.5 ? p : [p[1], p[0]]);
+  if (level === 1) {
+    const same = rnd(1, 9);
+    return [
+      mk(...flip(pair(1, 9)), "big"),
+      mk(...flip(pair(1, 9)), "small"),
+      mk(...flip(pair(1, 9, rnd(3, 6))), "big"),
+      mk(...flip(pair(1, 9, rnd(1, 3))), "small"),
+      mk(same, same, "big"),
+      mk(...flip(pair(1, 9, 1)), "big"),
+    ];
+  }
+  if (level === 2) {
+    const same = rnd(10, 99);
+    return [
+      mk(...flip(pair(11, 99)), "big"),
+      mk(...flip(pair(11, 99)), "small"),
+      mk(...flip(pair(10, 89, rnd(15, 40))), "big"),
+      mk(...flip(pair(10, 89, rnd(5, 15))), "small"),
+      mk(same, same, "big"),
+      mk(...flip(pair(10, 98, rnd(1, 4))), "big"),
+    ];
+  }
   const same = rnd(100, 999);
   return [
-    mk(...flip(pair(11, 99)), "big"),
-    mk(...flip(pair(11, 99)), "small"),
+    mk(...flip(pair(100, 999)), "big"),
+    mk(...flip(pair(100, 999)), "small"),
     mk(...flip(pair(100, 899, rnd(30, 120))), "big"),
     mk(...flip(pair(100, 899, rnd(10, 40))), "small"),
     mk(same, same, "big"),
@@ -43,8 +68,8 @@ function makeRounds(): Round[] {
   ];
 }
 
-export default function BalanceScale({ accent, accentDark, onDone }: FunGameProps) {
-  const rounds = useMemo(makeRounds, []);
+export default function BalanceScale({ accent, accentDark, level, onDone }: FunGameProps) {
+  const rounds = useMemo(() => makeRounds(level), [level]);
   const e = useEngine({ total: rounds.length, onDone, advanceMs: 1700 });
   const r = rounds[e.i];
   const [closed, setClosed] = useState(false);

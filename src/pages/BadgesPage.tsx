@@ -73,7 +73,7 @@ export default function BadgesPage() {
             <StarBadgeIcon className="w-14 h-14 opacity-60" />
             <p className="text-base font-bold text-ink-900">لم تحصل على شارة بعد، واصل التقدم!</p>
             <p className="text-sm text-ink-500">
-              أكملي أول مهمة أو درس لتحصلي على شارتك الأولى تلقائيًا.
+              أكمل أول مهمة أو درس لتحصل على شارتك الأولى تلقائيًا.
             </p>
           </div>
         )}

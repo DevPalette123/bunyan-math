@@ -36,7 +36,7 @@ export default function AddStudentModal({ onClose, onAdded }: AddStudentModalPro
 
     setSubmitting(false);
     if (invokeError || !data?.login_code) {
-      setError("تعذّر إضافة الطالب. حاولي مرة أخرى.");
+      setError("تعذّر إضافة الطالب. حاول مرة أخرى.");
       return;
     }
     setCreatedCode(data.login_code as string);
@@ -113,11 +113,11 @@ export default function AddStudentModal({ onClose, onAdded }: AddStudentModalPro
           <div className="flex flex-col gap-4">
             <p className="text-sm text-slate-700">
               تمت إضافة <span className="font-extrabold">{createdName}</span>. هذا رمز دخوله —
-              شاركيه معه، ويمكنكِ عرضه لاحقًا من قائمة الطلاب:
+              شاركيه معه، ويمكنك عرضه لاحقًا من قائمة الطلاب:
             </p>
 
             <div className="flex items-center justify-between gap-3 bg-teach-50 rounded-2xl px-4 py-3">
-              <span dir="ltr" className="text-lg font-extrabold tracking-widest text-teach-700">
+              <span dir="ltr" className="text-xl font-extrabold tracking-widest text-teach-700">
                 {createdCode}
               </span>
               <button

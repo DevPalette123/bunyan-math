@@ -355,7 +355,7 @@ export default function StudentProgressModal({
                 {quizDetail === undefined ? (
                   <Empty text="جارٍ التحميل..." />
                 ) : quizDetail === null ? (
-                  <Empty text="لم تبدأ الطالبة هذا القسم بعد." />
+                  <Empty text="لم يبدأ الطالب هذا القسم بعد." />
                 ) : (
                   <ResultRow
                     percent={quizDetail.percentage}

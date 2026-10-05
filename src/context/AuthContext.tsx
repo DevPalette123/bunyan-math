@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "../lib/supabaseClient";
 import type { ProfileRow } from "../lib/database.types";
-import { normalizeStudentCode, studentCodeToEmail } from "../lib/studentAuth";
+import { normalizeStudentCode, studentCodePassword, studentCodeToEmail } from "../lib/studentAuth";
 
 interface AuthContextValue {
   session: Session | null;
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * نقطة واحدة لمزامنة الجلسة مع البروفايل.
    * - نفس المستخدم الذي حُمّل بروفايله (مثل حدث SIGNED_IN الذي يصدر عند العودة للتبويب أو تجديد الرمز):
-   *   نحدّث الجلسة فقط، بلا شاشة «جارٍ التحقق» ولا إعادة تحميل (كانت تُفرغ الصفحة وتصفّر ما تفعله المعلمة).
+   *   نحدّث الجلسة فقط، بلا شاشة «جارٍ التحقق» ولا إعادة تحميل (كانت تُفرغ الصفحة وتصفّر ما تفعله المعلم).
    * - مستخدم مختلف: نمسح البروفايل القديم فورًا (فلا يُوجَّه حساب جديد بدور حساب سابق) ثم نحمّل الجديد.
    */
   async function syncSession(next: Session | null) {
@@ -127,11 +127,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!normalized) {
       return { error: "الرجاء إدخال رمز الطالب." };
     }
-    // Real Supabase Auth session underneath — the code is both the
-    // deterministic email local-part and the password, never a mock login.
+    // Real Supabase Auth session underneath — the code deterministically maps
+    // to the email and the password, never a mock login.
     const { error } = await supabase.auth.signInWithPassword({
       email: studentCodeToEmail(normalized),
-      password: normalized,
+      password: studentCodePassword(normalized),
     });
     if (error) {
       return { error: "رمز الدخول غير صحيح." };

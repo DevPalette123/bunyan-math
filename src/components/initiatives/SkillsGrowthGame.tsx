@@ -28,7 +28,7 @@ import {
 
 // ---------------------------------------------------------------------------
 // تنمية المهارات النمائية — رحلة تفاعلية مع «نُمو».
-// عشر محطات (نجوم)، كل محطة تنمّي مهارة وفيها ٢–٣ ألعاب وأنشطة قصيرة.
+// إحدى عشرة محطة (نجمة)، كل محطة تنمّي مهارة وفيها ٢–٣ ألعاب وأنشطة قصيرة.
 // نجوم المحطة (١–٣) = متوسط نجوم أنشطتها، وكل نشاط يعتمد على عدد أخطائه فقط.
 // لا رسوب: الخطأ يُعلّم ويمكن المتابعة. إكمال كل المحطات = الإشارة الحقيقية
 // لإكمال المبادرة (onComplete) — لم يتغيّر هذا العقد مع الخادم.
@@ -37,7 +37,8 @@ import {
 type ActId =
   | "memory" | "simon" | "pattern" | "odd" | "faces" | "breath" | "feelingsQuiz" | "kindness" | "socialQuiz" | "bag" | "selfQuiz"
   | "foodSort" | "handwash" | "healthQuiz" | "morning" | "timeQuiz" | "problemQuiz" | "logicQuiz"
-  | "envSort" | "envQuiz" | "confidenceQuiz" | "perseveranceQuiz";
+  | "envSort" | "envQuiz" | "confidenceQuiz" | "perseveranceQuiz"
+  | "identitySort" | "homelandQuiz" | "identityQuiz";
 
 interface Activity {
   id: ActId;
@@ -47,7 +48,7 @@ interface Activity {
 }
 
 interface Domain {
-  id: "memory" | "pattern" | "feelings" | "social" | "self" | "health" | "time" | "problem" | "citizen" | "confidence";
+  id: "memory" | "pattern" | "feelings" | "social" | "self" | "health" | "time" | "problem" | "citizen" | "identity" | "confidence";
   title: string;
   skill: string;
   blurb: string;
@@ -62,7 +63,7 @@ const DOMAINS: Domain[] = [
     id: "memory",
     title: "الانتباه والذاكرة",
     skill: "التركيز",
-    blurb: "بطاقات متطابقة وأضواء ملوّنة تدرّب ذاكرتكِ.",
+    blurb: "بطاقات متطابقة وأضواء ملوّنة تدرّب ذاكرتك.",
     emoji: "🧩",
     color: "#3A8FC4",
     soft: "#E9F4FB",
@@ -75,12 +76,12 @@ const DOMAINS: Domain[] = [
     id: "pattern",
     title: "التفكير والمنطق",
     skill: "التفكير",
-    blurb: "اكتشفي الأنماط وابحثي عن الشكل المختلف.",
+    blurb: "اكتشف الأنماط وابحث عن الشكل المختلف.",
     emoji: "💡",
     color: "#E3A422",
     soft: "#FDF3DC",
     activities: [
-      { id: "pattern", title: "أكملي النمط", tiers: [0, 2] },
+      { id: "pattern", title: "أكمل النمط", tiers: [0, 2] },
       { id: "odd", title: "الشكل المختلف", tiers: [0, 2] },
     ],
   },
@@ -88,40 +89,40 @@ const DOMAINS: Domain[] = [
     id: "feelings",
     title: "المشاعر",
     skill: "التحكم في الانفعال",
-    blurb: "تعرّفي على مشاعركِ وتعلّمي كيف تهدئينها.",
+    blurb: "تعرّف على مشاعرك وتعلّم كيف تهدئينها.",
     emoji: "💗",
     color: "#D6486E",
     soft: "#FCE9EE",
     activities: [
       { id: "faces", title: "وجوه المشاعر", tiers: [0, 2] },
       { id: "breath", title: "فقاعة الهدوء", tiers: [0, 0] },
-      { id: "feelingsQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "feelingsQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
     ],
   },
   {
     id: "social",
     title: "التعاون مع الآخرين",
     skill: "المهارات الاجتماعية",
-    blurb: "كلمات لطيفة وتصرفات جميلة مع زميلاتكِ.",
+    blurb: "كلمات لطيفة وتصرفات جميلة مع زملائك.",
     emoji: "🤝",
     color: "#1F7A4D",
     soft: "#EAF5EE",
     activities: [
       { id: "kindness", title: "صندوق اللطف", tiers: [1, 3] },
-      { id: "socialQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "socialQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
     ],
   },
   {
     id: "self",
     title: "الاعتماد على النفس",
     skill: "المسؤولية",
-    blurb: "جهّزي حقيبتكِ وكوني مسؤولة عن أغراضكِ.",
+    blurb: "جهّز حقيبتك وكن مسؤولة عن أغراضك.",
     emoji: "🎒",
     color: "#8C55AD",
     soft: "#F3EBF7",
     activities: [
-      { id: "bag", title: "جهّزي حقيبتكِ", tiers: [1, 3] },
-      { id: "selfQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "bag", title: "جهّز حقيبتك", tiers: [1, 3] },
+      { id: "selfQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
     ],
   },
   {
@@ -135,32 +136,32 @@ const DOMAINS: Domain[] = [
     activities: [
       { id: "foodSort", title: "سلّة الطعام", tiers: [1, 3] },
       { id: "handwash", title: "خطوات غسل اليدين", tiers: [1, 3] },
-      { id: "healthQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "healthQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
     ],
   },
   {
     id: "time",
     title: "تنظيم الوقت",
     skill: "التخطيط",
-    blurb: "رتّبي يومكِ وأنجزي مهامكِ في وقتها.",
+    blurb: "رتّب يومك وأنجز مهامك في وقتها.",
     emoji: "⏰",
     color: "#0F8B8D",
     soft: "#E0F4F3",
     activities: [
       { id: "morning", title: "روتين الصباح", tiers: [1, 3] },
-      { id: "timeQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "timeQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
     ],
   },
   {
     id: "problem",
     title: "حل المشكلات",
     skill: "التفكير الناقد",
-    blurb: "فكّري بهدوء وابحثي عن الحل المناسب.",
+    blurb: "فكّر بهدوء وابحث عن الحل المناسب.",
     emoji: "🔍",
     color: "#5A67D8",
     soft: "#ECEEFB",
     activities: [
-      { id: "problemQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "problemQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
       { id: "logicQuiz", title: "ألغاز الأنماط", tiers: [0, 2] },
     ],
   },
@@ -168,26 +169,40 @@ const DOMAINS: Domain[] = [
     id: "citizen",
     title: "المواطنة والبيئة",
     skill: "حب الوطن",
-    blurb: "احمي بيئة عُمان وحافظي على نظافتها.",
+    blurb: "احم بيئة عُمان وحافظ على نظافتها.",
     emoji: "🌍",
     color: "#7CB342",
     soft: "#F0F7E4",
     activities: [
       { id: "envSort", title: "يحمي أم يضرّ؟", tiers: [1, 3] },
-      { id: "envQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "envQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
+    ],
+  },
+  {
+    id: "identity",
+    title: "هويتي ووطني",
+    skill: "الانتماء والاعتزاز",
+    blurb: "تعرّف على سلطنة عُمان: علمها وتراثها وعاداتنا الجميلة.",
+    emoji: "🏰",
+    color: "#B8322F",
+    soft: "#FBE9E7",
+    activities: [
+      { id: "identitySort", title: "من عُمان أم من بلد آخر؟", tiers: [1, 3] },
+      { id: "homelandQuiz", title: "اعرف وطنك عُمان", tiers: [0, 2] },
+      { id: "identityQuiz", title: "أعتزّ بهويتي", tiers: [0, 2] },
     ],
   },
   {
     id: "confidence",
     title: "الثقة والمثابرة",
     skill: "الإصرار",
-    blurb: "آمني بنفسكِ وحاولي مرة أخرى دائمًا.",
+    blurb: "آمن بنفسك وحاول مرة أخرى دائمًا.",
     emoji: "💪",
     color: "#E08669",
     soft: "#FBEAE7",
     activities: [
-      { id: "confidenceQuiz", title: "ماذا تقولين لنفسكِ؟", tiers: [0, 2] },
-      { id: "perseveranceQuiz", title: "ماذا تفعلين؟", tiers: [0, 2] },
+      { id: "confidenceQuiz", title: "ماذا تقول لنفسك؟", tiers: [0, 2] },
+      { id: "perseveranceQuiz", title: "ماذا تفعل؟", tiers: [0, 2] },
     ],
   },
 ];
@@ -212,7 +227,8 @@ const c = (kind: ShapeKind, color: string): Item => ({ kind, color });
 
 type QuizId =
   | "pattern" | "feelingsQuiz" | "socialQuiz" | "selfQuiz"
-  | "healthQuiz" | "timeQuiz" | "problemQuiz" | "logicQuiz" | "envQuiz" | "confidenceQuiz" | "perseveranceQuiz";
+  | "healthQuiz" | "timeQuiz" | "problemQuiz" | "logicQuiz" | "envQuiz" | "confidenceQuiz" | "perseveranceQuiz"
+  | "homelandQuiz" | "identityQuiz";
 
 const QUESTIONS: Record<QuizId, Question[]> = {
   pattern: [
@@ -240,19 +256,19 @@ const QUESTIONS: Record<QuizId, Question[]> = {
   ],
   feelingsQuiz: [
     {
-      prompt: "أضعتِ قلمكِ المفضّل وشعرتِ بالضيق. ماذا تفعلين؟",
+      prompt: "أضعت قلمك المفضّل وشعرت بالضيق. ماذا تفعل؟",
       options: ["أصرخ وأرمي حقيبتي", "آخذ نفسًا عميقًا ثم أبحث بهدوء", "أبكي وأرفض البحث"],
       answer: 1,
       explain: "التنفس العميق يهدّئ الجسم، وبعده نفكّر بشكل أفضل.",
     },
     {
-      prompt: "فازت زميلتكِ بالمسابقة ولم تفوزي أنتِ. كيف تتصرفين؟",
+      prompt: "فازت زميلك بالمسابقة ولم تفز أنت. كيف تتصرف؟",
       options: ["أهنّئها وأحاول مرة أخرى", "أقول لها إنها غشّت", "أبتعد وأغضب"],
       answer: 0,
       explain: "التهنئة تدلّ على خُلق جميل، والمحاولة من جديد تجعلنا نتحسّن.",
     },
     {
-      prompt: "تشعرين بالخوف قبل عرض أمام الصف. ما الذي يساعدكِ؟",
+      prompt: "تشعر بالخوف قبل عرض أمام الصف. ما الذي يساعدك؟",
       options: ["أهرب من الصف", "أقول إنني مريضة", "أتنفّس ببطء وأقول: أستطيع"],
       answer: 2,
       explain: "الكلام الإيجابي مع النفس والتنفّس البطيء يقلّلان الخوف.",
@@ -260,19 +276,19 @@ const QUESTIONS: Record<QuizId, Question[]> = {
   ],
   socialQuiz: [
     {
-      prompt: "تريدين اللعب بلعبة مع زميلتكِ. ماذا تقولين؟",
-      options: ["هل أستطيع اللعب معكِ من فضلكِ؟", "أخذها منها فورًا", "أصرخ حتى تعطيني إياها"],
+      prompt: "تريد اللعب بلعبة مع زميلك. ماذا تقول؟",
+      options: ["هل أستطيع اللعب معك من فضلك؟", "أخذها منها فورًا", "أصرخ حتى تعطيني إياها"],
       answer: 0,
-      explain: "الطلب اللطيف بـ «من فضلكِ» يجعل الجميع يحبّون اللعب معنا.",
+      explain: "الطلب اللطيف بـ «من فضلك» يجعل الجميع يحبّون اللعب معنا.",
     },
     {
-      prompt: "زميلتكِ تحمل كتبًا كثيرة وتكاد تسقطها. ماذا تفعلين؟",
+      prompt: "زميلك تحمل كتبًا كثيرة وتكاد تسقطها. ماذا تفعل؟",
       options: ["أضحك عليها", "أتجاهلها", "أساعدها بلطف"],
       answer: 2,
       explain: "مساعدة الآخرين تنشر الفرح وتقوّي الصداقة.",
     },
     {
-      prompt: "في عمل جماعي اختلف رأيكِ مع رأي زميلاتكِ. ماذا تفعلين؟",
+      prompt: "في عمل جماعي اختلف رأيك مع رأي زملائك. ماذا تفعل؟",
       options: ["أصرّ على رأيي فقط", "أستمع لآرائهن ثم نتفق معًا", "أترك المجموعة"],
       answer: 1,
       explain: "الاستماع لبعضنا يساعدنا على الوصول إلى أفضل فكرة.",
@@ -280,19 +296,19 @@ const QUESTIONS: Record<QuizId, Question[]> = {
   ],
   selfQuiz: [
     {
-      prompt: "قبل النوم، ماذا تجهّزين للمدرسة؟",
+      prompt: "قبل النوم، ماذا تجهّز للمدرسة؟",
       options: ["ألعابي فقط", "حقيبتي وواجباتي", "لا شيء، سأتذكّر غدًا"],
       answer: 1,
-      explain: "تجهيز الحقيبة من الليل يجعل الصباح هادئًا وأنتِ مستعدة.",
+      explain: "تجهيز الحقيبة من الليل يجعل الصباح هادئًا وأنت مستعد.",
     },
     {
-      prompt: "أخطأتِ في حل مسألة رياضيات. ماذا تفعلين؟",
+      prompt: "أخطأت في حل مسألة رياضيات. ماذا تفعل؟",
       options: ["أحاول من جديد وأتعلّم من خطئي", "أمزّق الورقة", "أقول: لا أستطيع أبدًا"],
       answer: 0,
       explain: "الخطأ خطوة للتعلّم، والمحاولة من جديد تصنع النجاح.",
     },
     {
-      prompt: "وجدتِ ورقة ملقاة على أرض الصف. ماذا تفعلين؟",
+      prompt: "وجدت ورقة ملقاة على أرض الصف. ماذا تفعل؟",
       options: ["أتركها مكانها", "أرميها في الممر", "أضعها في سلة المهملات"],
       answer: 2,
       explain: "المحافظة على نظافة الصف مسؤولية كل واحدة منّا.",
@@ -300,19 +316,19 @@ const QUESTIONS: Record<QuizId, Question[]> = {
   ],
   healthQuiz: [
     {
-      prompt: "كم مرة يُنصح أن تنظّفي أسنانكِ في اليوم؟",
+      prompt: "كم مرة يُنصح أن تنظّف أسنانك في اليوم؟",
       options: ["مرة واحدة كل أسبوع", "مرتين على الأقل: صباحًا وقبل النوم", "لا داعي لتنظيفها"],
       answer: 1,
       explain: "تنظيف الأسنان صباحًا وقبل النوم يحميها من التسوّس.",
     },
     {
-      prompt: "ما أفضل مشروب يرافق طعامكِ ويحافظ على صحتكِ؟",
+      prompt: "ما أفضل مشروب يرافق طعامك ويحافظ على صحتك؟",
       options: ["الماء", "المشروبات الغازية", "عصير كثير السكر"],
       answer: 0,
       explain: "الماء يرطّب الجسم ولا يحتوي على سكر زائد.",
     },
     {
-      prompt: "تشعرين بالتعب في الصباح. ما الذي يساعدكِ على النشاط؟",
+      prompt: "تشعر بالتعب في الصباح. ما الذي يساعدك على النشاط؟",
       options: ["السهر إلى وقت متأخر", "النوم مبكرًا وتناول فطور صحي", "ترك الفطور"],
       answer: 1,
       explain: "النوم الكافي والفطور الصحي يمنحان الجسم طاقة لليوم كله.",
@@ -320,19 +336,19 @@ const QUESTIONS: Record<QuizId, Question[]> = {
   ],
   timeQuiz: [
     {
-      prompt: "لديكِ واجب ووقت للّعب. ماذا تفعلين أولًا؟",
+      prompt: "لديك واجب ووقت للّعب. ماذا تفعل أولًا؟",
       options: ["أؤجّل الواجب إلى الغد", "أنجز الواجب ثم ألعب", "ألعب حتى أنام"],
       answer: 1,
       explain: "إنجاز المهام أولًا يمنحنا وقتًا للّعب براحة بال.",
     },
     {
-      prompt: "كيف تساعدكِ قائمة المهام؟",
+      prompt: "كيف تساعدك قائمة المهام؟",
       options: ["تجعلني أنسى", "تنظّم وقتي وتذكّرني بما عليّ", "لا فائدة منها"],
       answer: 1,
       explain: "الكتابة تساعدنا على ترتيب ما نريد إنجازه.",
     },
     {
-      prompt: "تأخّرتِ عن المدرسة هذا الصباح. ما الحل لتجنّب ذلك غدًا؟",
+      prompt: "تأخّرت عن المدرسة هذا الصباح. ما الحل لتجنّب ذلك غدًا؟",
       options: ["أنام مبكرًا وأجهّز أغراضي من الليل", "أتجاهل موعد الاستيقاظ", "أقول: لا يهم"],
       answer: 0,
       explain: "التجهيز المسبق والنوم المبكر يجعلان الصباح هادئًا.",
@@ -340,20 +356,20 @@ const QUESTIONS: Record<QuizId, Question[]> = {
   ],
   problemQuiz: [
     {
-      prompt: "ضاع دفتركِ في الصف. ما أول خطوة ذكية؟",
-      options: ["أبكي وأتوقف عن الدراسة", "أتذكّر أين استخدمته آخر مرة وأبحث هناك", "أتّهم زميلتي"],
+      prompt: "ضاع دفترك في الصف. ما أول خطوة ذكية؟",
+      options: ["أبكي وأتوقف عن الدراسة", "أتذكّر أين استخدمته آخر مرة وأبحث هناك", "أتّهم زميلي"],
       answer: 1,
       explain: "التفكير الهادئ في آخر مكان استخدمناه يقرّبنا من الحل.",
     },
     {
-      prompt: "اختلفتِ مع صديقتكِ على لعبة واحدة. ما الحل؟",
+      prompt: "اختلفت مع صديقك على لعبة واحدة. ما الحل؟",
       options: ["نلعب بالتناوب، لكل واحدة دور", "نتوقف عن الكلام", "آخذ اللعبة بالقوة"],
       answer: 0,
       explain: "التناوب حلّ عادل يُرضي الجميع.",
     },
     {
-      prompt: "لا تفهمين خطوة في المسألة. ماذا تفعلين؟",
-      options: ["أطلب المساعدة من معلمتي وأسأل بهدوء", "أترك الواجب فارغًا", "أنسخ من زميلتي"],
+      prompt: "لا تفهم خطوة في المسألة. ماذا تفعل؟",
+      options: ["أطلب المساعدة من معلمي وأسأل بهدوء", "أترك الواجب فارغًا", "أنسخ من زميلي"],
       answer: 0,
       explain: "السؤال دليل على الذكاء، وبه نتعلّم أكثر.",
     },
@@ -396,34 +412,74 @@ const QUESTIONS: Record<QuizId, Question[]> = {
     },
     {
       prompt: "لماذا نحافظ على نظافة مدرستنا وحيّنا؟",
-      options: ["لأنها وطننا وبيئتنا التي نعيش فيها", "لأن المعلمة تراقبنا فقط", "لا يهم الأمر"],
+      options: ["لأنها وطننا وبيئتنا التي نعيش فيها", "لأن المعلم يراقبنا فقط", "لا يهم الأمر"],
       answer: 0,
       explain: "المحافظة على النظافة حبٌّ للوطن ومسؤولية الجميع.",
     },
   ],
+  homelandQuiz: [
+    {
+      prompt: "ما عاصمة سلطنة عُمان؟",
+      options: ["مسقط", "صلالة", "نزوى"],
+      answer: 0,
+      explain: "مسقط هي عاصمة سلطنة عُمان.",
+    },
+    {
+      prompt: "ما ألوان علم سلطنة عُمان؟",
+      options: ["الأزرق والأصفر", "الأبيض والأحمر والأخضر", "الأسود والأبيض"],
+      answer: 1,
+      explain: "علم عُمان فيه الأبيض والأحمر والأخضر، وفي أعلاه شعار الخنجرين والسيف.",
+    },
+    {
+      prompt: "في أي يوم نحتفل باليوم الوطني العُماني؟",
+      options: ["١ يناير", "١٨ نوفمبر", "٢٠ مارس"],
+      answer: 1,
+      explain: "نحتفل باليوم الوطني في ١٨ نوفمبر من كل عام، ونرفع فيه العلم فرحًا بوطننا.",
+    },
+  ],
+  identityQuiz: [
+    {
+      prompt: "جاءت ضيفة إلى بيتكم. كيف نستقبلها كما يفعل العُمانيون؟",
+      options: ["نرحّب بها بالقهوة والتمر والحلوى", "ندعها تنتظر وحدها", "لا ننتبه لها"],
+      answer: 0,
+      explain: "الكرم وحسن الضيافة من أجمل صفات أهل عُمان.",
+    },
+    {
+      prompt: "في اليوم الوطني، كيف نعبّر عن حبّنا لوطننا؟",
+      options: ["نرفع العلم ونفرح بأدب ونحافظ على نظافة المكان", "نرمي الأوراق الملوّنة في الشارع", "لا نهتم بالمناسبة"],
+      answer: 0,
+      explain: "حب الوطن يظهر في احترام العلم والمحافظة على بلدنا.",
+    },
+    {
+      prompt: "كيف نحافظ على تراثنا وهويتنا العُمانية؟",
+      options: ["نتعلّم من الكبار قصصهم وعاداتنا ونفخر بها", "نهمل لباسنا وعاداتنا", "نخجل من لهجتنا وتراثنا"],
+      answer: 0,
+      explain: "الاعتزاز بعاداتنا وتراثنا ونقلهما للأجيال يحفظ هويتنا.",
+    },
+  ],
   confidenceQuiz: [
     {
-      prompt: "قالت زميلتكِ إنكِ لا تجيدين الرسم. ماذا تقولين لنفسكِ؟",
+      prompt: "قالت زميلك إنك لا تجيد الرسم. ماذا تقول لنفسك؟",
       options: ["صحيح، لن أحاول أبدًا", "أستطيع أن أتحسّن إذا تدرّبت", "سأترك الرسم"],
       answer: 1,
       explain: "التدريب يجعلنا أفضل يومًا بعد يوم.",
     },
     {
-      prompt: "أخطأتِ أثناء القراءة أمام الصف. ماذا تفعلين؟",
+      prompt: "أخطأت أثناء القراءة أمام الصف. ماذا تفعل؟",
       options: ["أبتسم وأكمل القراءة", "أبكي وأجلس", "أرفض القراءة بعد ذلك"],
       answer: 0,
       explain: "الجميع يخطئ، والشجاعة أن نكمل ونحاول.",
     },
     {
-      prompt: "ما الذي يجعلكِ أقوى في التعلّم؟",
+      prompt: "ما الذي يجعلك أقوى في التعلّم؟",
       options: ["الاستسلام سريعًا", "الثقة بنفسي وطلب المساعدة عند الحاجة", "المقارنة بالآخرين دائمًا"],
       answer: 1,
-      explain: "الثقة بالنفس مع طلب المساعدة تصنع المتعلّمة القوية.",
+      explain: "الثقة بالنفس مع طلب المساعدة تصنع المتعلّم القوي.",
     },
   ],
   perseveranceQuiz: [
     {
-      prompt: "حاولتِ ربط الحذاء ولم تنجحي. ماذا تفعلين؟",
+      prompt: "حاولت ربط الحذاء ولم تنجح. ماذا تفعل؟",
       options: ["أحاول مرة أخرى بهدوء", "أرمي الحذاء", "أنتظر أن يفعلها غيري دائمًا"],
       answer: 0,
       explain: "التكرار بهدوء هو طريق النجاح في أي مهارة.",
@@ -443,8 +499,8 @@ const QUESTIONS: Record<QuizId, Question[]> = {
   ],
 };
 
-const CHEERS = ["أحسنتِ!", "رائع!", "ممتاز!", "ما شاء الله!", "أنتِ ذكية!", "كبرتُ بفضلكِ! 🌱"];
-const COMFORTS = ["لا بأس، جرّبي مرة أخرى!", "الخطأ يعلّمنا، أنتِ تستطيعين!", "خطوة أخرى وستنجحين 💪"];
+const CHEERS = ["أحسنت!", "رائع!", "ممتاز!", "ما شاء الله!", "أنت ذكي!", "كبرتُ بفضلك! 🌱"];
+const COMFORTS = ["لا بأس، جرّب مرة أخرى!", "الخطأ يعلّمنا، أنت تستطيع!", "خطوة أخرى وستنجح 💪"];
 
 function starsFor(mistakes: number, tiers: [number, number]): number {
   if (mistakes <= tiers[0]) return 3;
@@ -525,7 +581,7 @@ function MemoryLevel({ onDone, onFeedback }: LevelProps) {
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      <p className="text-center text-sm sm:text-base font-bold text-ink-700">اقلبي بطاقتين في كل مرة، وابحثي عن الشكلين المتطابقين.</p>
+      <p className="text-center text-sm sm:text-base font-bold text-ink-700">اقلب بطاقتين في كل مرة، وابحث عن الشكلين المتطابقين.</p>
       <div className="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-md" style={{ perspective: 800 }}>
         {cards.map((card) => {
           const open = flipped.includes(card.id) || matched.includes(card.pair);
@@ -674,7 +730,7 @@ function QuizLevel({
       </div>
 
       {wrong.length > 0 && correct === null && (
-        <p className="text-sm font-bold text-rose-500 text-center animate-rise-in">لا بأس، فكّري مرة أخرى وجرّبي خيارًا آخر.</p>
+        <p className="text-sm font-bold text-rose-500 text-center animate-rise-in">لا بأس، فكّر مرة أخرى وجرّب خيارًا آخر.</p>
       )}
 
       {correct !== null && (
@@ -817,7 +873,7 @@ function SpeechBubble({ text, color }: { text: string; color: string }) {
 type Screen = "intro" | "play" | "stationDone" | "final";
 
 interface SkillsGrowthGameProps {
-  /** هل أكملت الطالبة هذه المبادرة سابقًا (من قاعدة البيانات). */
+  /** هل أكملت الطالب هذه المبادرة سابقًا (من قاعدة البيانات). */
   alreadyCompleted: boolean;
   /** يُستدعى مرة عند إنهاء كل المحطات — يسجّل الإكمال ويمنح النجوم في الخادم. */
   onComplete: () => void;
@@ -921,7 +977,7 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
     </div>
   );
 
-  /** شريط الرحلة: محطات بأيقونات، المضيئة أكملتها الطالبة. */
+  /** شريط الرحلة: محطات بأيقونات، المضيئة أكملتها الطالب. */
   const trail = (current: number, done: number) => (
     <div className="w-full flex items-center justify-center gap-1 sm:gap-1.5" aria-label="محطات الرحلة">
       {DOMAINS.map((d, i) => {
@@ -967,6 +1023,7 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
         return <BagLevel key={key} {...common} />;
       case "foodSort":
       case "envSort":
+      case "identitySort":
         return <SortLevel key={key} data={SORTS[activity.id]} {...common} />;
       case "handwash":
       case "morning":
@@ -985,14 +1042,14 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
           <GrowthBuddy stage={0} mood="idle" className="w-36 h-48 sm:w-40 sm:h-52 shrink-0" />
           <div className="relative rounded-3xl bg-white shadow-soft px-4 py-3.5 max-w-[15rem]">
             <p className="text-sm font-extrabold text-ink-900 leading-relaxed">
-              مرحبًا! أنا «نُمو» 🌱 برعم صغير أحلم أن أُزهر نجمة. ساعديني على النمو في كل محطة!
+              مرحبًا! أنا «نُمو» 🌱 برعم صغير أحلم أن أُزهر نجمة. ساعدني على النمو في كل محطة!
             </p>
             <span className="absolute top-1/2 -translate-y-1/2 -start-[7px] w-3.5 h-3.5 bg-white rotate-45" />
           </div>
         </div>
 
         <div className="text-center flex flex-col gap-1">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-900">رحلة النجوم العشر</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-900">رحلة النجوم الإحدى عشرة</h2>
           <p className="text-sm font-bold text-ink-500">
             {toArabicDigits(DOMAINS.length)} محطات و{toArabicDigits(TOTAL_ACTIVITIES)} لعبة ونشاطًا ممتعًا
           </p>
@@ -1023,14 +1080,14 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
           onClick={start}
           className="flex items-center gap-2 bg-berry-500 hover:bg-berry-600 text-white font-extrabold text-base rounded-2xl px-9 py-3.5 shadow-lift transition-all hover:-translate-y-0.5 active:translate-y-0"
         >
-          ابدئي الرحلة
+          ابدأ الرحلة
           <ChevronIcon className="w-4 h-4 rotate-180" />
         </button>
       </div>
     );
   } else if (screen === "play") {
     const shownMood: BuddyMood = mood === "idle" && activity.id === "breath" ? "calm" : mood;
-    const idleLine = act === 0 ? `المحطة ${toArabicDigits(level + 1)}: ${domain.title}. هيا نبدأ!` : `نشاط جديد: ${activity.title}. أنتِ رائعة!`;
+    const idleLine = act === 0 ? `المحطة ${toArabicDigits(level + 1)}: ${domain.title}. هيا نبدأ!` : `نشاط جديد: ${activity.title}. أنت رائعة!`;
     const bubbleText = mood === "happy" || mood === "sad" ? say : idleLine;
 
     body = (
@@ -1070,7 +1127,7 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
           <GrowthBuddy stage={stageOf(earned.length)} mood="cheer" className="w-40 h-52" />
         </div>
         <div className="text-center flex flex-col gap-2 items-center">
-          <h2 className="text-xl sm:text-2xl font-extrabold text-ink-900">أضأتِ نجمة «{domain.title}»!</h2>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-ink-900">أضأت نجمة «{domain.title}»!</h2>
           <div className="flex items-center justify-center gap-1.5">
             {[1, 2, 3].map((n) => (
               <StarIcon
@@ -1079,9 +1136,9 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
               />
             ))}
           </div>
-          <p className="text-sm font-extrabold text-palm-600">كبرتُ بفضلكِ! أصبحتُ الآن: {BUDDY_STAGE_NAMES[stageOf(earned.length)]}</p>
+          <p className="text-sm font-extrabold text-palm-600">كبرتُ بفضلك! أصبحتُ الآن: {BUDDY_STAGE_NAMES[stageOf(earned.length)]}</p>
           <p className="text-sm font-bold text-ink-700">
-            {got === 3 ? "أداء مذهل بلا أخطاء تُذكر!" : got === 2 ? "أداء جميل جدًا، استمري!" : "أحسنتِ، المحاولة تصنع التميّز."}
+            {got === 3 ? "أداء مذهل بلا أخطاء تُذكر!" : got === 2 ? "أداء جميل جدًا، استمر!" : "أحسنت، المحاولة تصنع التميّز."}
           </p>
         </div>
         <button
@@ -1104,9 +1161,9 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
           <GrowthBuddy stage={5} mood="cheer" className="w-44 h-56" />
         </div>
         <div className="text-center flex flex-col gap-2">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-900">أزهرتُ بفضلكِ! 🌟</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-900">أزهرتُ بفضلك! 🌟</h2>
           <p className="text-sm sm:text-base font-bold text-ink-700 text-balance">
-            أضأتِ النجوم العشر ونمّيتِ مهاراتكِ في التركيز والتفكير والمشاعر والتعاون والاعتماد على النفس والصحة وتنظيم الوقت وحل المشكلات والمواطنة والثقة بالنفس.
+            أضأت النجوم الإحدى عشرة ونمّيت مهاراتك في التركيز والتفكير والمشاعر والتعاون والاعتماد على النفس والصحة وتنظيم الوقت وحل المشكلات والمواطنة والاعتزاز بهويتك العُمانية والثقة بالنفس.
           </p>
         </div>
 
@@ -1129,13 +1186,13 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
           ) : saveStatus === "saving" && !wasAlready ? (
             <div className="rounded-2xl bg-sand-100 text-ink-500 p-4 flex flex-col items-center gap-1 shadow-soft">
               <span className="text-lg font-extrabold">...</span>
-              <span className="text-xs font-bold">جارٍ حفظ إنجازكِ</span>
+              <span className="text-xs font-bold">جارٍ حفظ إنجازك</span>
             </div>
           ) : (
             <div className="rounded-2xl bg-palm-50 text-palm-600 p-4 flex flex-col items-center gap-1 shadow-soft">
               <CheckCircleIcon className="w-5 h-5" />
               <span className="text-2xl font-extrabold">{wasAlready ? "مكتملة" : "+٥"}</span>
-              <span className="text-xs font-bold">{wasAlready ? "أُضيفت نجومها سابقًا" : "نجوم أُضيفت لرصيدكِ"}</span>
+              <span className="text-xs font-bold">{wasAlready ? "أُضيفت نجومها سابقًا" : "نجوم أُضيفت لرصيدك"}</span>
             </div>
           )}
         </div>
@@ -1158,7 +1215,7 @@ export default function SkillsGrowthGame({ alreadyCompleted, onComplete, saveSta
 
         <div className="flex items-center gap-3">
           <button onClick={start} className="bg-berry-500 hover:bg-berry-600 text-white font-extrabold text-sm rounded-2xl px-6 py-2.5 transition-colors">
-            العبي مرة أخرى
+            العب مرة أخرى
           </button>
           <button onClick={onExit} className="bg-white shadow-soft text-ink-700 font-extrabold text-sm rounded-2xl px-6 py-2.5">
             الرئيسية

@@ -1,4 +1,4 @@
-// منشئ المسابقة — صفحة كاملة للمعلمة: /teacher/competitions/new و /teacher/competitions/:id/edit
+// منشئ المسابقة — صفحة كاملة للمعلم: /teacher/competitions/new و /teacher/competitions/:id/edit
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -103,7 +103,7 @@ export default function CompetitionBuilderPage() {
 
   async function persist(): Promise<boolean> {
     if (!draft) return false;
-    if (!draft.title.trim()) { setMsg({ type: "err", text: "اكتبي اسم المسابقة أولًا." }); return false; }
+    if (!draft.title.trim()) { setMsg({ type: "err", text: "اكتب اسم المسابقة أولًا." }); return false; }
     setSaving(true);
     try {
       await saveCompetition(draft);
@@ -115,7 +115,7 @@ export default function CompetitionBuilderPage() {
       setSavedAt(new Date());
       return true;
     } catch (e: any) {
-      setMsg({ type: "err", text: "تعذّر الحفظ. تحققي من الاتصال وحاولي مرة أخرى." });
+      setMsg({ type: "err", text: "تعذّر الحفظ. تحقق من الاتصال وحاول مرة أخرى." });
       // eslint-disable-next-line no-console
       console.error("save_competition failed:", e?.message ?? e);
       return false;
@@ -130,7 +130,7 @@ export default function CompetitionBuilderPage() {
     if (!draft) return;
     const issues = validateForPublish(draft);
     setProblems(issues);
-    if (issues.length) { setMsg({ type: "err", text: "أكملي النقاط التالية قبل النشر." }); return; }
+    if (issues.length) { setMsg({ type: "err", text: "أكمل النقاط التالية قبل النشر." }); return; }
     if (!(await persist())) return;
     setSaving(true);
     try {
@@ -141,7 +141,7 @@ export default function CompetitionBuilderPage() {
       setPublished(true);
       setMsg(null);
     } catch {
-      setMsg({ type: "err", text: "تعذّر نشر المسابقة. حاولي مرة أخرى." });
+      setMsg({ type: "err", text: "تعذّر نشر المسابقة. حاول مرة أخرى." });
     } finally { setSaving(false); }
   }
 
@@ -157,7 +157,7 @@ export default function CompetitionBuilderPage() {
   }
 
   function leave() {
-    if (dirty && !window.confirm("لديك تغييرات غير محفوظة. هل تريدين المغادرة؟")) return;
+    if (dirty && !window.confirm("لديك تغييرات غير محفوظة. هل تريد المغادرة؟")) return;
     navigate("/teacher");
   }
 
@@ -167,7 +167,7 @@ export default function CompetitionBuilderPage() {
       <div dir="rtl" className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
         <div className="bg-white rounded-3xl shadow-soft p-8 text-center flex flex-col gap-4 max-w-sm">
           <p className="text-sm font-bold text-rose-500">{loadError}</p>
-          <button onClick={() => navigate("/teacher")} className="text-sm font-extrabold text-white bg-teach-500 rounded-xl px-5 py-2.5">العودة للوحة المعلمة</button>
+          <button onClick={() => navigate("/teacher")} className="text-sm font-extrabold text-white bg-teach-500 rounded-xl px-5 py-2.5">العودة للوحة المعلم</button>
         </div>
       </div>
     );
@@ -234,7 +234,7 @@ export default function CompetitionBuilderPage() {
           </section>
         )}
         {draft.status === "closed" && !isLive && (
-          <p className="bg-slate-100 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600">هذه المسابقة مغلقة. اضغطي «نشر المسابقة» لإعادة فتحها.</p>
+          <p className="bg-slate-100 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600">هذه المسابقة مغلقة. اضغط «نشر المسابقة» لإعادة فتحها.</p>
         )}
 
         {/* الإعدادات */}
@@ -360,13 +360,13 @@ export default function CompetitionBuilderPage() {
           </ul>
 
           {page.items.length === 0 && !picker && (
-            <p className="text-center text-sm font-bold text-slate-400 py-4">الصفحة فارغة — أضيفي أول عنصر.</p>
+            <p className="text-center text-sm font-bold text-slate-400 py-4">الصفحة فارغة — أضف أول عنصر.</p>
           )}
 
           {picker ? (
             <div className="rounded-2xl border-2 border-dashed border-teach-200 bg-white p-4 flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-extrabold text-slate-800">اختاري نوع العنصر</p>
+                <p className="text-sm font-extrabold text-slate-800">اختر نوع العنصر</p>
                 <button onClick={() => setPicker(false)} className="text-xs font-extrabold text-slate-500 hover:bg-slate-100 rounded-lg px-3 py-1.5">إغلاق</button>
               </div>
               {(Object.keys(GROUPS) as (keyof typeof GROUPS)[]).map((g) => (

@@ -4,9 +4,9 @@ import { playGameCorrectSound, playGameWrongSound } from "../../../lib/playSound
 import { rnd, shuffle, starsFor, uniq, wait } from "./funUtils";
 import { useEffect } from "react";
 import { Burst, Progress, Talk } from "./kit/ui";
-import type { FunGameProps } from "./types";
+import type { FunGameProps, FunLevel } from "./types";
 
-// الضعف «توصيل»: صلي كل عدد بضعفه — البومة تشجّع وتصحّح بلطف.
+// الضعف «توصيل»: صِل كل عدد بضعفه — البومة تشجّع وتصحّح بلطف.
 const COLORS = ["#E4526F", "#3A8FC4", "#E3A422", "#3E9C6B", "#8C55AD"];
 
 interface Board {
@@ -14,9 +14,17 @@ interface Board {
   doubles: number[]; // الأضعاف مخلوطة (العمود الثاني)
 }
 
-function makeBoards(): Board[] {
+// المستويات: ١ مبتدئ (أعداد من رقم واحد) · ٢ متوسط (رقمان) · ٣ متقدم (ثلاثة أرقام).
+// لوحتان في كل مستوى، في كل لوحة ٥ أعداد. في المتقدم: اللوحة الأولى أعداد مضاعفات العشرة،
+// والثانية أرقامها لا تتجاوز ٤ فلا يوجد حمل عند التضعيف.
+function makeBoards(level: FunLevel): Board[] {
   const mk = (xs: number[]): Board => ({ nums: shuffle(xs), doubles: shuffle(xs.map((x) => x * 2)) });
-  return [mk(uniq(5, () => rnd(1, 10))), mk(uniq(5, () => rnd(6, 25)))];
+  if (level === 1) return [mk(uniq(5, () => rnd(1, 9))), mk(uniq(5, () => rnd(1, 9)))];
+  if (level === 2) return [mk(uniq(5, () => rnd(10, 25))), mk(uniq(5, () => rnd(26, 49)))];
+  return [
+    mk(uniq(5, () => rnd(10, 49) * 10)),
+    mk(uniq(5, () => rnd(1, 4) * 100 + rnd(0, 4) * 10 + rnd(0, 4))),
+  ];
 }
 
 interface Line {
@@ -27,8 +35,8 @@ interface Line {
   y2: number;
 }
 
-export default function MemoryMatch({ accent, accentDark, onDone }: FunGameProps) {
-  const boards = useMemo(makeBoards, []);
+export default function MemoryMatch({ accent, accentDark, level, onDone }: FunGameProps) {
+  const boards = useMemo(() => makeBoards(level), [level]);
   const [b, setB] = useState(0);
   const [sel, setSel] = useState<number | null>(null);
   const [done, setDone] = useState<number[]>([]); // الأعداد الموصولة
@@ -116,7 +124,7 @@ export default function MemoryMatch({ accent, accentDark, onDone }: FunGameProps
         <p className="text-sm sm:text-base">
           الضعف = العدد + نفسه
           <br />
-          <span className="text-xs text-ink-500">اضغطي على عدد ثم على ضعفه ليتّصلا</span>
+          <span className="text-xs text-ink-500">اضغط على عدد ثم على ضعفه ليتّصلا</span>
         </p>
       </Talk>
 

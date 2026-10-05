@@ -60,7 +60,7 @@ export default function FunGameDetailModal({ studentId, studentName, gameId, onC
         {history === null ? (
           <p className="text-sm text-slate-500">جارٍ التحميل...</p>
         ) : history.length === 0 ? (
-          <p className="text-sm text-slate-500">لم تلعب هذه الطالبة «{game?.title}» بعد.</p>
+          <p className="text-sm text-slate-500">لم يلعب هذا الطالب «{game?.title}» بعد.</p>
         ) : (
           <div className="flex flex-col gap-5">
             <div className="grid grid-cols-3 gap-3">

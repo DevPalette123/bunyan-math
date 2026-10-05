@@ -86,15 +86,15 @@ function explainFailure(f: InvokeFailure): string {
   }
   // 3) بوابة Supabase رفضت المفتاح/الـJWT (شائع مع مفاتيح sb_publishable_ الجديدة).
   if (f.status === 401 || f.status === 403 || /jwt|unauthori[sz]ed/i.test(`${bodyCode} ${bodyMsg}`)) {
-    return "رفضت بوابة Supabase الطلب (401): الدالة تتطلب JWT بينما مفتاح مشروعكِ من النوع الجديد. أعيدي نشرها بالأمر: supabase functions deploy demo-start --no-verify-jwt";
+    return "رفضت بوابة Supabase الطلب (401): الدالة تتطلب JWT بينما مفتاح مشروعك من النوع الجديد. أعد نشرها بالأمر: supabase functions deploy demo-start --no-verify-jwt";
   }
   if (f.kind === "FunctionsFetchError") {
-    return "تعذّر الوصول إلى دالة demo-start (شبكة أو CORS أو أنها غير منشورة). افتحي Console وNetwork لرؤية الطلب.";
+    return "تعذّر الوصول إلى دالة demo-start (شبكة أو CORS أو أنها غير منشورة). افتح Console وNetwork لرؤية الطلب.";
   }
   if (f.status && f.status >= 500) {
-    return `خطأ داخل دالة demo-start (${f.status}). راجعي Supabase ← Edge Functions ← demo-start ← Logs.${bodyMsg ? ` (${bodyMsg.slice(0, 160)})` : ""}`;
+    return `خطأ داخل دالة demo-start (${f.status}). راجع Supabase ← Edge Functions ← demo-start ← Logs.${bodyMsg ? ` (${bodyMsg.slice(0, 160)})` : ""}`;
   }
-  return "تعذّر بدء التجربة. حاولي مرة أخرى بعد قليل.";
+  return "تعذّر بدء التجربة. حاول مرة أخرى بعد قليل.";
 }
 
 export async function startDemo(role: "teacher" | "student"): Promise<{ error: string | null }> {
@@ -112,7 +112,7 @@ export async function startDemo(role: "teacher" | "student"): Promise<{ error: s
     if (!data?.token_hash) {
       // eslint-disable-next-line no-console
       console.error("[demo] ردّت الدالة بلا token_hash:", data);
-      return { error: "ردّت دالة demo-start دون رمز دخول. راجعي سجلاتها (Logs) في Supabase." };
+      return { error: "ردّت دالة demo-start دون رمز دخول. راجع سجلاتها (Logs) في Supabase." };
     }
 
     const { error: otpError } = await supabase.auth.verifyOtp({

@@ -57,7 +57,7 @@ export default function LoginPage() {
     if (!profile) {
       setDemoBusy(null);
       setPendingDemoRole(null);
-      setDemoError("تعذّر تحميل حساب التجربة. حاولي مرة أخرى بعد قليل.");
+      setDemoError("تعذّر تحميل حساب التجربة. حاول مرة أخرى بعد قليل.");
       void signOut();
       return;
     }
@@ -69,8 +69,8 @@ export default function LoginPage() {
       console.error(`[demo] دور الحساب (${profile.role}) لا يطابق الدور المطلوب (${wanted}).`);
       setDemoError(
         wanted === "teacher"
-          ? "حساب «تجربة المعلمة» خرج بدور طالبة. أعيدي نشر دالتي demo-start و demo-sweep ثم جرّبي مرة أخرى."
-          : "حساب «تجربة الطالبة» خرج بدور معلمة. أعيدي نشر دالتي demo-start و demo-sweep ثم جرّبي مرة أخرى."
+          ? "حساب «تجربة المعلم» خرج بدور طالب. أعد نشر دالتي demo-start و demo-sweep ثم جرّب مرة أخرى."
+          : "حساب «تجربة الطالب» خرج بدور معلم. أعد نشر دالتي demo-start و demo-sweep ثم جرّب مرة أخرى."
       );
       void signOut();
       return;
@@ -131,7 +131,7 @@ export default function LoginPage() {
                 tab === "teacher" ? "bg-white text-palm-600 shadow-soft" : "text-ink-500"
               }`}
             >
-              دخول المعلمة
+              دخول المعلم
             </button>
             <button
               type="button"
@@ -201,13 +201,16 @@ export default function LoginPage() {
                   required
                   dir="ltr"
                   autoCapitalize="characters"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  spellCheck={false}
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  className="rounded-2xl border border-sand-200 px-4 py-3 text-lg font-extrabold tracking-widest text-ink-900 text-center focus:outline-none focus:ring-2 focus:ring-palm-500"
-                  placeholder="BNY-XXXXX"
+                  className="rounded-2xl border border-sand-200 px-4 py-3 text-xl font-extrabold tracking-widest text-ink-900 text-center focus:outline-none focus:ring-2 focus:ring-palm-500"
+                  placeholder="BNY1"
                 />
                 <span className="text-[11px] text-ink-500">
-                  اطلبي رمزكِ من معلمتكِ — لا حاجة لبريد إلكتروني أو كلمة مرور.
+                  اكتب رمزك: BNY ثم رقمك، مثل BNY1. اطلبيه من معلمك — لا حاجة لبريد إلكتروني أو كلمة مرور.
                 </span>
               </label>
 
@@ -231,24 +234,24 @@ export default function LoginPage() {
         {/* أثناء التطوير المحلي فقط: إن لم تكن التجربة مفعّلة نُظهر السبب بدل إخفاء المنطقة بصمت. */}
         {import.meta.env.DEV && demoStatus !== null && !demoAvailable && (
           <div role="note" className="mt-5 rounded-3xl border-2 border-dashed border-sun-400 bg-sun-50 p-4 text-start">
-            <p className="text-xs font-extrabold text-ink-900">🧪 أزرار «تجربة المعلمة/الطالبة» مخفية (تظهر لك هذه الملاحظة في وضع التطوير فقط)</p>
+            <p className="text-xs font-extrabold text-ink-900">🧪 أزرار «تجربة المعلم/الطالب» مخفية (تظهر لك هذه الملاحظة في وضع التطوير فقط)</p>
             <p className="text-[11px] text-ink-700 mt-1.5 leading-relaxed">
               {demoStatus === "not_installed" &&
                 "السبب: لم يُشغَّل ملف supabase/phase10-demo-mode.sql في قاعدة البيانات بعد."}
               {demoStatus === "off" && (
-                <>السبب: التجربة معطّلة. شغّلي في SQL Editor: <span dir="ltr" className="font-extrabold">update public.demo_settings set enabled = true;</span></>
+                <>السبب: التجربة معطّلة. شغّل في SQL Editor: <span dir="ltr" className="font-extrabold">update public.demo_settings set enabled = true;</span></>
               )}
               {demoStatus === "unreachable" &&
-                "السبب: تعذّر الاتصال بقاعدة البيانات (تحقّقي من VITE_SUPABASE_URL و VITE_SUPABASE_ANON_KEY في ملف .env ثم أعيدي تشغيل npm run dev)."}
+                "السبب: تعذّر الاتصال بقاعدة البيانات (تحقّق من VITE_SUPABASE_URL و VITE_SUPABASE_ANON_KEY في ملف .env ثم أعد تشغيل npm run dev)."}
             </p>
           </div>
         )}
 
         {demoAvailable && (
           <div className="mt-5 bg-white rounded-3xl shadow-soft p-5 text-center">
-            <p className="text-sm font-extrabold text-ink-900">اكتشفي بنيان</p>
+            <p className="text-sm font-extrabold text-ink-900">اكتشف بنيان</p>
             <p className="text-[11px] text-ink-500 mt-1 leading-relaxed">
-              جرّبي المنصة كمعلمة أو طالبة بحساب وبيانات تجريبية — بدون بريد أو رمز.
+              جرّب المنصة كمعلم أو طالب بحساب وبيانات تجريبية — بدون بريد أو رمز.
             </p>
             <div className="grid grid-cols-2 gap-2 mt-4">
               <button
@@ -257,7 +260,7 @@ export default function LoginPage() {
                 onClick={() => handleDemo("teacher")}
                 className="rounded-2xl bg-palm-50 hover:bg-palm-100 text-palm-600 disabled:opacity-60 font-extrabold text-sm py-3 transition-colors"
               >
-                {demoBusy === "teacher" ? "جارٍ التجهيز..." : "👩‍🏫 تجربة المعلمة"}
+                {demoBusy === "teacher" ? "جارٍ التجهيز..." : "🧑‍🏫 تجربة المعلم"}
               </button>
               <button
                 type="button"
@@ -265,7 +268,7 @@ export default function LoginPage() {
                 onClick={() => handleDemo("student")}
                 className="rounded-2xl bg-palm-50 hover:bg-palm-100 text-palm-600 disabled:opacity-60 font-extrabold text-sm py-3 transition-colors"
               >
-                {demoBusy === "student" ? "جارٍ التجهيز..." : "👧 تجربة الطالبة"}
+                {demoBusy === "student" ? "جارٍ التجهيز..." : "🧒 تجربة الطالب"}
               </button>
             </div>
             {demoBusy && <p className="text-[11px] text-ink-500 mt-3">جارٍ تجهيز تجربتك… قد يستغرق ذلك بضع ثوانٍ.</p>}
@@ -279,8 +282,8 @@ export default function LoginPage() {
 
         <p className="text-[11px] text-ink-500 text-center mt-5 leading-relaxed">
           {tab === "teacher"
-            ? "لا تملكين حسابًا؟ تواصلي مع إدارة المدرسة لإنشاء حساب لك."
-            : "فقدتِ رمزكِ؟ اطلبي من معلمتكِ عرضه لكِ من جديد."}
+            ? "لا تملك حسابًا؟ تواصل مع إدارة المدرسة لإنشاء حساب لك."
+            : "فقدت رمزك؟ اطلب من معلمك عرضه لك من جديد."}
         </p>
 
         <InstallAppButton className="mt-5" />

@@ -6,7 +6,7 @@ import { playGameCorrectSound, playGameNextSound, playGameWrongSound } from "../
 
 // ألعاب إضافية لمحطات «تنمية المهارات النمائية» الجديدة: التصنيف وترتيب الخطوات.
 // نفس عقد بقية المستويات: onDone(عدد الأخطاء) وonFeedback(صح/خطأ)، ولا رسوب —
-// الخطأ يُحتسب ثم تكمل الطالبة حتى تصيب.
+// الخطأ يُحتسب ثم تكمل الطالب حتى تصيب.
 
 function useLater() {
   const timers = useRef<number[]>([]);
@@ -114,7 +114,7 @@ export function SortLevel({ data, onDone, onFeedback }: LevelProps & { data: Sor
 }
 
 // ---------------------------------------------------------------------------
-// ترتيب الخطوات: اضغطي الخطوات بالترتيب الصحيح
+// ترتيب الخطوات: اضغط الخطوات بالترتيب الصحيح
 // ---------------------------------------------------------------------------
 
 export interface StepsData {
@@ -176,7 +176,7 @@ export function StepsLevel({ data, onDone, onFeedback }: LevelProps & { data: St
         })}
       </ol>
 
-      <p className="text-xs font-bold text-ink-500">اضغطي الخطوة التي تأتي {picked.length === 0 ? "أولًا" : "بعد ذلك"}:</p>
+      <p className="text-xs font-bold text-ink-500">اضغط الخطوة التي تأتي {picked.length === 0 ? "أولًا" : "بعد ذلك"}:</p>
       <div className="w-full max-w-sm flex flex-col gap-2">
         {order.map((k) => {
           const s = data.steps[k];
@@ -207,9 +207,9 @@ export function StepsLevel({ data, onDone, onFeedback }: LevelProps & { data: St
 // المحتوى
 // ---------------------------------------------------------------------------
 
-export const SORTS: Record<"foodSort" | "envSort", SortData> = {
+export const SORTS: Record<"foodSort" | "envSort" | "identitySort", SortData> = {
   foodSort: {
-    prompt: "ضعي كل طعام في السلّة المناسبة:",
+    prompt: "ضع كل طعام في السلّة المناسبة:",
     left: { label: "قليلًا فقط", emoji: "🍬", color: "#E08669" },
     right: { label: "يقوّي جسمي", emoji: "💪", color: "#3E9C6B" },
     items: [
@@ -238,11 +238,27 @@ export const SORTS: Record<"foodSort" | "envSort", SortData> = {
       { text: "ترك النفايات على الشاطئ", emoji: "🏖️", side: "left" },
     ],
   },
+  // هويتي ووطني: معالم وتراث من سلطنة عُمان مقابل معالم معروفة من بلدان أخرى.
+  identitySort: {
+    prompt: "هل هذا من سلطنة عُمان أم من بلد آخر؟",
+    left: { label: "من بلد آخر", emoji: "🌍", color: "#5BA9D6" },
+    right: { label: "من عُمان", emoji: "🏰", color: "#3E9C6B" },
+    items: [
+      { text: "الخنجر العُماني", emoji: "🗡️", side: "right" },
+      { text: "برج إيفل", emoji: "🗼", side: "left" },
+      { text: "قلعة نزوى", emoji: "🏰", side: "right" },
+      { text: "تمثال الحرية", emoji: "🗽", side: "left" },
+      { text: "السفينة الشراعية العُمانية", emoji: "⛵", side: "right" },
+      { text: "الكيمونو الياباني", emoji: "👘", side: "left" },
+      { text: "الحلوى العُمانية", emoji: "🍯", side: "right" },
+      { text: "سور الصين العظيم", emoji: "🧱", side: "left" },
+    ],
+  },
 };
 
 export const STEPS: Record<"handwash" | "morning", StepsData> = {
   handwash: {
-    prompt: "رتّبي خطوات غسل اليدين:",
+    prompt: "رتّب خطوات غسل اليدين:",
     steps: [
       { text: "أبلّل يديّ بالماء", emoji: "🚰" },
       { text: "أضع الصابون وأفركهما جيدًا", emoji: "🧼" },
@@ -251,7 +267,7 @@ export const STEPS: Record<"handwash" | "morning", StepsData> = {
     ],
   },
   morning: {
-    prompt: "رتّبي روتين الصباح من البداية إلى الذهاب للمدرسة:",
+    prompt: "رتّب روتين الصباح من البداية إلى الذهاب للمدرسة:",
     steps: [
       { text: "أستيقظ من النوم", emoji: "⏰" },
       { text: "أغسل وجهي وأسناني", emoji: "🪥" },

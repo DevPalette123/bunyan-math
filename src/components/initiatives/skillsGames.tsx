@@ -177,7 +177,7 @@ export function SimonLevel({ onDone, onFeedback }: LevelProps) {
   return (
     <div className="w-full flex flex-col items-center gap-4">
       <Hint>
-        {phase === "watch" ? "شاهدي الأضواء جيدًا وتذكّري ترتيبها 👀" : phase === "repeat" ? "دوركِ! المسي الأضواء بنفس الترتيب ✋" : "\u00A0"}
+        {phase === "watch" ? "شاهد الأضواء جيدًا وتذكّر ترتيبها 👀" : phase === "repeat" ? "دورك! المس الأضواء بنفس الترتيب ✋" : "\u00A0"}
       </Hint>
       <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xs">
         {PADS.map((pad, i) => {
@@ -257,7 +257,7 @@ export function OddOneLevel({ onDone, onFeedback }: LevelProps) {
 
   return (
     <div className="w-full flex flex-col items-center gap-4" key={ri}>
-      <Hint>ابحثي عن الشكل المختلف عن البقية 🔍</Hint>
+      <Hint>ابحث عن الشكل المختلف عن البقية 🔍</Hint>
       <div className="grid grid-cols-3 gap-2.5 sm:gap-3 w-full max-w-xs rounded-[28px] bg-white shadow-soft p-3 sm:p-4 animate-pop-in">
         {Array.from({ length: 9 }).map((_, i) => {
           const isOdd = i === oddAt[ri];
@@ -279,8 +279,8 @@ export function OddOneLevel({ onDone, onFeedback }: LevelProps) {
         })}
       </div>
       <Dots total={ODD_ROUNDS.length} done={ri} color="#E3A422" />
-      {found && <p className="text-sm font-extrabold text-palm-600 animate-rise-in">وجدتِه! عين ذكية 🌟</p>}
-      {wrong.length > 0 && !found && <p className="text-sm font-bold text-rose-500 animate-rise-in">قارني الأشكال جيدًا وجرّبي مرة أخرى.</p>}
+      {found && <p className="text-sm font-extrabold text-palm-600 animate-rise-in">وجدته! عين ذكية 🌟</p>}
+      {wrong.length > 0 && !found && <p className="text-sm font-bold text-rose-500 animate-rise-in">قارن الأشكال جيدًا وجرّب مرة أخرى.</p>}
     </div>
   );
 }
@@ -292,11 +292,11 @@ export function OddOneLevel({ onDone, onFeedback }: LevelProps) {
 type Emotion = "happy" | "sad" | "angry" | "scared" | "surprised";
 
 const EMOTIONS: { id: Emotion; label: string; tip: string }[] = [
-  { id: "happy", label: "سعيدة", tip: "عندما أفرح أشارك فرحتي مع من أحب." },
-  { id: "sad", label: "حزينة", tip: "عندما أحزن أتحدث مع شخص أثق به، وأشعر بتحسّن." },
-  { id: "angry", label: "غاضبة", tip: "عندما أغضب آخذ نفسًا عميقًا وأعدّ إلى عشرة." },
-  { id: "scared", label: "خائفة", tip: "عندما أخاف أتنفّس ببطء وأطلب المساعدة." },
-  { id: "surprised", label: "متفاجئة", tip: "المفاجأة شعور سريع، ثم أهدأ وأفهم ما حدث." },
+  { id: "happy", label: "سعيد", tip: "عندما أفرح أشارك فرحتي مع من أحب." },
+  { id: "sad", label: "حزين", tip: "عندما أحزن أتحدث مع شخص أثق به، وأشعر بتحسّن." },
+  { id: "angry", label: "غاضب", tip: "عندما أغضب آخذ نفسًا عميقًا وأعدّ إلى عشرة." },
+  { id: "scared", label: "خائف", tip: "عندما أخاف أتنفّس ببطء وأطلب المساعدة." },
+  { id: "surprised", label: "متفاجئ", tip: "المفاجأة شعور سريع، ثم أهدأ وأفهم ما حدث." },
 ];
 
 function Face({ emotion, className = "w-28 h-28" }: { emotion: Emotion; className?: string }) {
@@ -404,7 +404,7 @@ export function FacesLevel({ onDone, onFeedback }: LevelProps) {
 
   return (
     <div className="w-full flex flex-col items-center gap-4" key={ri}>
-      <Hint>ما شعور صاحبة هذا الوجه؟</Hint>
+      <Hint>ما شعور صاحب هذا الوجه؟</Hint>
       <div className="rounded-[32px] bg-white shadow-soft p-5 animate-pop-in">
         <div className={right ? "animate-mascot-hop" : ""}>
           <Face emotion={r.answer.id} className="w-32 h-32 sm:w-36 sm:h-36" />
@@ -477,15 +477,15 @@ export function BreathLevel({ onDone, onFeedback }: LevelProps) {
   }
 
   const big = step === "in";
-  const label = step === "ready" ? "جاهزة؟" : step === "in" ? "شهيق…" : step === "out" ? "زفير…" : "أحسنتِ!";
+  const label = step === "ready" ? "جاهزة؟" : step === "in" ? "شهيق…" : step === "out" ? "زفير…" : "أحسنت!";
   const sub =
     step === "ready"
       ? "سنتنفّس معًا ثلاث مرات ببطء لنهدأ."
       : step === "in"
-        ? "املئي صدركِ بالهواء من أنفكِ ببطء"
+        ? "املأ صدرك بالهواء من أنفك ببطء"
         : step === "out"
-          ? "أخرجي الهواء من فمكِ بهدوء"
-          : "شعرتِ بالهدوء؟ هذه طريقتكِ السحرية عند الغضب أو الخوف.";
+          ? "أخرج الهواء من فمك بهدوء"
+          : "شعرت بالهدوء؟ هذه طريقتك السحرية عند الغضب أو الخوف.";
 
   return (
     <div className="w-full flex flex-col items-center gap-5">
@@ -520,7 +520,7 @@ export function BreathLevel({ onDone, onFeedback }: LevelProps) {
           className="text-white font-extrabold text-base rounded-2xl px-8 py-3 hover:opacity-90"
           style={{ backgroundColor: COLORS.red }}
         >
-          ابدئي التنفّس
+          ابدأ التنفّس
         </button>
       )}
       {step === "done" && (
@@ -541,20 +541,20 @@ export function BreathLevel({ onDone, onFeedback }: LevelProps) {
 // ---------------------------------------------------------------------------
 
 const KIND_WORDS = [
-  "شكرًا لكِ يا صديقتي",
-  "تفضّلي، هذا دورُكِ",
+  "شكرًا لك يا صديقي",
+  "تفضّلي، هذا دورُك",
   "أنا آسفة، لم أقصد ذلك",
-  "هل تحبّين اللعب معنا؟",
-  "ما شاء الله، رسمكِ جميل",
-  "سأساعدكِ في حمل الكتب",
+  "هل تحبّ اللعب معنا؟",
+  "ما شاء الله، رسمك جميل",
+  "سأساعدك في حمل الكتب",
 ];
 const UNKIND_WORDS = [
-  "أنتِ لا تعرفين شيئًا!",
-  "ابتعدي عني، لا أريدكِ",
-  "رسمكِ قبيح جدًا",
-  "هذا لي! أعطيني إياه الآن",
-  "لن ألعب معكِ أبدًا",
-  "أنتِ بطيئة، أسرعي!",
+  "أنت لا تعرف شيئًا!",
+  "ابتعد عني، لا أريدك",
+  "رسمك قبيح جدًا",
+  "هذا لي! أعطني إياه الآن",
+  "لن ألعب معك أبدًا",
+  "أنت بطيء، أسرع!",
 ];
 
 export function KindnessLevel({ onDone, onFeedback }: LevelProps) {
@@ -606,7 +606,7 @@ export function KindnessLevel({ onDone, onFeedback }: LevelProps) {
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      <Hint>اقرئي العبارة، ثم قرّري: هل هي كلمة لطيفة أم غير لطيفة؟</Hint>
+      <Hint>اقرأ العبارة، ثم قرّر: هل هي كلمة لطيفة أم غير لطيفة؟</Hint>
 
       <div
         key={i}
@@ -618,7 +618,7 @@ export function KindnessLevel({ onDone, onFeedback }: LevelProps) {
         <p className="text-lg sm:text-xl font-extrabold text-ink-900 text-balance leading-relaxed">«{card.t}»</p>
         {result && (
           <p className={`text-sm font-extrabold ${result === "right" ? "text-palm-600" : "text-rose-500"}`}>
-            {result === "right" ? "أحسنتِ!" : card.kind ? "هذه كلمة لطيفة تُفرح القلب." : "هذه كلمة غير لطيفة تؤذي المشاعر."}
+            {result === "right" ? "أحسنت!" : card.kind ? "هذه كلمة لطيفة تُفرح القلب." : "هذه كلمة غير لطيفة تؤذي المشاعر."}
           </p>
         )}
       </div>
@@ -652,7 +652,7 @@ export function KindnessLevel({ onDone, onFeedback }: LevelProps) {
 }
 
 // ---------------------------------------------------------------------------
-// ٦) جهّزي حقيبتكِ — الاعتماد على النفس
+// ٦) جهّز حقيبتك — الاعتماد على النفس
 // ---------------------------------------------------------------------------
 
 const BAG_ITEMS: { id: string; icon: string; label: string; need: boolean }[] = [
@@ -693,7 +693,7 @@ export function BagLevel({ onDone, onFeedback }: LevelProps) {
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      <Hint>غدًا يومٌ دراسي! اختاري ما تحتاجينه فقط ليدخل حقيبتكِ 🎒</Hint>
+      <Hint>غدًا يومٌ دراسي! اختر ما تحتاجينه فقط ليدخل حقيبتك 🎒</Hint>
 
       <div className="flex items-center gap-2 rounded-full bg-white shadow-soft px-4 py-2">
         <span className={`text-2xl ${picked.length ? "animate-mascot-hop" : ""}`} key={picked.length} aria-hidden="true">🎒</span>

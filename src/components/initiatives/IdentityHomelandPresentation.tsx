@@ -107,6 +107,8 @@ export default function IdentityHomelandPresentation({ onVideoEnded }: IdentityH
                 إعداد: أ. رحمة الخروصية
                 <br />
                 مديرة المدرسة: أ. ليلى الكيومية
+                <br />
+                المشرفة: أ. فاطمة الغافرية
               </p>
               <button
                 onClick={() => go("map")}

@@ -13,7 +13,7 @@ export default function PlayPage() {
   const { session } = useAuth();
   const userId = session?.user.id ?? null;
 
-  // أفضل نجوم الطالبة الحالية من fun_game_results. نحفظ معها معرّف صاحبتها حتى
+  // أفضل نجوم الطالب الحالية من fun_game_results. نحفظ معها معرّف صاحبتها حتى
   // لا تُعرض أبدًا نتيجة حساب آخر، وأثناء التحميل أو عند الخطأ تبقى النجوم غير مضيئة.
   const [loaded, setLoaded] = useState<{ userId: string; best: BestMap } | null>(null);
 
@@ -38,7 +38,7 @@ export default function PlayPage() {
             <img src={iconPlay} alt="" className="w-11 h-11 object-contain" />
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-900">العب</h1>
-          <p className="text-sm sm:text-base font-bold text-ink-500">اختاري مهارة والعبي وتعلّمي</p>
+          <p className="text-sm sm:text-base font-bold text-ink-500">اختر مهارة والعب وتعلّم</p>
         </section>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">

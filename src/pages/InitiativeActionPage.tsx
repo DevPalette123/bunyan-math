@@ -136,7 +136,7 @@ export default function InitiativeActionPage() {
 
   // -------------------------------------------------------------------
   // Presentation — العرض التفاعلي (فيديوهات الولايات) يعمل داخل الصفحة.
-  // يُسجَّل الإكمال عندما تنهي الطالبة فيديوهات الولايات الأربع إلى آخرها.
+  // يُسجَّل الإكمال عندما تنهي الطالب فيديوهات الولايات الأربع إلى آخرها.
   // -------------------------------------------------------------------
   if (item.kind === "presentation") {
     const totalVideos = 4;
@@ -203,7 +203,7 @@ export default function InitiativeActionPage() {
                 {completed ? (
                   <span className="flex items-center gap-1.5 text-sm font-extrabold text-palm-600">
                     <CheckCircleIcon className="w-4 h-4" />
-                    أنهيتِ الاطلاع ✓
+                    أنهيت الاطلاع ✓
                   </span>
                 ) : (
                   <button

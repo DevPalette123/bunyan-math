@@ -148,7 +148,7 @@ export default function DiscoverPage() {
       // Not saved — selectedAnswer stays null, so the options remain
       // clickable and "التالي" stays disabled. No sound plays either,
       // since no real correct/wrong outcome was actually recorded.
-      setAnswerError("حدث خطأ أثناء حفظ إجابتك. اضغطي على الإجابة مرة أخرى للمحاولة من جديد.");
+      setAnswerError("حدث خطأ أثناء حفظ إجابتك. اضغط على الإجابة مرة أخرى للمحاولة من جديد.");
       return;
     }
 

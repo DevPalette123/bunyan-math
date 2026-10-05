@@ -20,9 +20,9 @@ interface QuizResultProps {
 }
 
 const HEADLINE: Record<string, string> = {
-  "متقن": "أحسنتِ! اكتمل برجك بإتقان",
+  "متقن": "أحسنت! اكتمل برجك بإتقان",
   "جيد": "أداء جيد جدًا، وبرجك قوي",
-  "في طور التقدم": "برجك يكبر، وأنتِ في طور التقدم",
+  "في طور التقدم": "برجك يكبر، وأنت في طور التقدم",
   "يحتاج إلى تأسيس": "بداية طيبة، نبني معًا طوبة بعد طوبة",
 };
 
@@ -52,7 +52,7 @@ export default function QuizResult({ result, review, retrying = false, onRetry, 
           wrongStyle="empty"
           flagColor={celebrate ? "#F0B94A" : "#F3DFC1"}
           className="w-full max-w-[250px] h-auto"
-          label={`بنيتِ ${toArabicDigits(correctAnswers)} طوبات من ${toArabicDigits(result.totalQuestions)}`}
+          label={`بنيت ${toArabicDigits(correctAnswers)} طوبات من ${toArabicDigits(result.totalQuestions)}`}
         />
         <h1 className="font-kufi font-bold text-2xl sm:text-3xl text-mortar leading-snug text-balance">
           {HEADLINE[level] ?? level}
@@ -80,7 +80,7 @@ export default function QuizResult({ result, review, retrying = false, onRetry, 
       </section>
       {pointsAwarded === 0 && correctAnswers > 0 && (
         <p className="-mt-3 text-center text-xs font-bold text-mortar/70">
-          النجوم تُمنح لأول اختبار في كل يوم. نتيجة هذه المحاولة محفوظة وتظهر لمعلمتك.
+          النجوم تُمنح لأول اختبار في كل يوم. نتيجة هذه المحاولة محفوظة وتظهر لمعلمك.
         </p>
       )}
 
@@ -103,7 +103,7 @@ export default function QuizResult({ result, review, retrying = false, onRetry, 
 
       <details className="w-full rounded-[28px] bg-sand-50 p-5 sm:p-6 border-b-[6px] border-mortar group">
         <summary className="flex items-center justify-between cursor-pointer list-none text-base font-extrabold text-ink-900 [&::-webkit-details-marker]:hidden">
-          راجعي إجاباتك
+          راجع إجاباتك
           <ChevronIcon className="w-4 h-4 transition-transform rotate-180 group-open:-rotate-90" />
         </summary>
         <div className="mt-4 flex flex-col gap-3">
@@ -134,7 +134,7 @@ export default function QuizResult({ result, review, retrying = false, onRetry, 
           className="flex items-center justify-center gap-2 rounded-2xl bg-sun-400 hover:bg-sun-500 border-b-[6px] border-sun-600 active:translate-y-[3px] active:border-b-[3px] disabled:opacity-60 disabled:pointer-events-none text-ink-900 font-extrabold text-base px-8 py-3.5 transition-[transform,background-color]"
         >
           <RedoIcon className="w-5 h-5" />
-          {retrying ? "جارٍ تجهيز الأسئلة..." : "أعيدي الاختبار بأرقام جديدة"}
+          {retrying ? "جارٍ تجهيز الأسئلة..." : "أعد الاختبار بأرقام جديدة"}
         </button>
         {weakSkills.length > 0 && (
           <button

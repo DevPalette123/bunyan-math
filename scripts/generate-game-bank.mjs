@@ -124,7 +124,7 @@ const MUST = {
 const rows = [];
 for (const [gameId, g] of Object.entries(games)) {
   for (const tier of ["easy", "medium", "hard"]) {
-    // الأمثلة التي طلبتها المعلمة تدخل البنك دائمًا، ثم يُكمَّل المستوى بعيّنة عشوائية.
+    // الأمثلة التي طلبتها المعلم تدخل البنك دائمًا، ثم يُكمَّل المستوى بعيّنة عشوائية.
     const must = MUST[gameId].filter(([a, b]) => g.pairs[tier].some(([x, y]) => x === a && y === b));
     const rest = g.pairs[tier].filter(([x, y]) => !must.some(([a, b]) => a === x && b === y));
     const chosen = [...must, ...sample(rest, PICK[gameId][tier] - must.length)];
@@ -192,7 +192,7 @@ for (const [tier, { min, max, unit }] of Object.entries(roundingDomains)) {
       game_id: "rounding",
       skill: "rounding",
       difficulty: tier,
-      question_text: `قرّبي العدد ${n} لأقرب ${unit === 10 ? "عشرة" : "مئة"}`,
+      question_text: `قرّب العدد ${n} لأقرب ${unit === 10 ? "عشرة" : "مئة"}`,
       operand_a: n,
       operand_b: unit,
       operator: "round",
@@ -206,7 +206,7 @@ for (const [tier, { min, max, unit }] of Object.entries(roundingDomains)) {
 // -----------------------------------------------------------------------------
 // الضعف — «سهلة للأطفال»: نطاق كل مستوى لا يتجاوز الضعف عدد خانات المدخل نفسه
 // (رقم واحد يبقى ضعفه من خانة أو خانتين كالمعتاد، رقمان يبقى ضعفهما رقمين،
-// ثلاثة أرقام يبقى ضعفها ثلاثة أرقام) — فلا تُفاجئ الطالبة بخانة جديدة كليًا.
+// ثلاثة أرقام يبقى ضعفها ثلاثة أرقام) — فلا تُفاجئ الطالب بخانة جديدة كليًا.
 // -----------------------------------------------------------------------------
 const doublingDomains = { easy: [1, 9], medium: [10, 49], hard: [100, 499] };
 
@@ -301,7 +301,7 @@ for (const orderGameId of ["ascending-order", "descending-order"]) {
         game_id: orderGameId,
         skill,
         difficulty: tier,
-        question_text: `رتّبي الأعداد التالية ${descending ? "تنازليًا" : "تصاعديًا"}: ${shown.join(", ")}`,
+        question_text: `رتّب الأعداد التالية ${descending ? "تنازليًا" : "تصاعديًا"}: ${shown.join(", ")}`,
         operand_a: shown[0],
         operand_b: null,
         operator: descending ? "order_desc" : "order_asc",

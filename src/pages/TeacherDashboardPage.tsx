@@ -147,7 +147,7 @@ export default function TeacherDashboardPage() {
       .maybeSingle();
 
     if (classError) {
-      setLoadError("تعذّر تحميل بيانات صفك. تحققي من اتصالك وحاولي مرة أخرى.");
+      setLoadError("تعذّر تحميل بيانات صفك. تحقق من اتصالك وحاول مرة أخرى.");
       setLoading(false);
       return;
     }
@@ -164,7 +164,7 @@ export default function TeacherDashboardPage() {
         .single();
 
       if (createError || !created) {
-        setLoadError("تعذّر إنشاء صف جديد لك. حاولي مرة أخرى.");
+        setLoadError("تعذّر إنشاء صف جديد لك. حاول مرة أخرى.");
         setLoading(false);
         return;
       }
@@ -180,7 +180,7 @@ export default function TeacherDashboardPage() {
       .eq("class_id", activeClass.id);
 
     if (studentsError) {
-      setLoadError("تعذّر تحميل قائمة الطلاب. حاولي مرة أخرى.");
+      setLoadError("تعذّر تحميل قائمة الطلاب. حاول مرة أخرى.");
       setLoading(false);
       return;
     }
@@ -195,7 +195,7 @@ export default function TeacherDashboardPage() {
       .order("created_at", { ascending: false });
 
     if (tasksError) {
-      setLoadError("تعذّر تحميل المهام. حاولي مرة أخرى.");
+      setLoadError("تعذّر تحميل المهام. حاول مرة أخرى.");
       setLoading(false);
       return;
     }
@@ -215,7 +215,7 @@ export default function TeacherDashboardPage() {
     ]);
 
     if (assignmentsResult.error || badgesResult.error || initiativesResult.error) {
-      setLoadError("تعذّر تحميل بيانات التقدم. حاولي مرة أخرى.");
+      setLoadError("تعذّر تحميل بيانات التقدم. حاول مرة أخرى.");
       setLoading(false);
       return;
     }
@@ -281,8 +281,8 @@ export default function TeacherDashboardPage() {
     loadDashboard();
   }, [loadDashboard]);
 
-  // تحديث هادئ للنجوم والشارات والمبادرات عند عودة المعلمة للتبويب — حتى ترى
-  // ما أنجزته الطالبات للتو دون إعادة تحميل الصفحة (ودون وميض شاشة التحميل).
+  // تحديث هادئ للنجوم والشارات والمبادرات عند عودة المعلم للتبويب — حتى ترى
+  // ما أنجزته الطلاب للتو دون إعادة تحميل الصفحة (ودون وميض شاشة التحميل).
   const refreshProgressQuietly = useCallback(async () => {
     if (!isSupabaseConfigured || !classId) return;
     const { data: rows } = await supabase.from("students").select("id, stars").eq("class_id", classId);
@@ -377,7 +377,7 @@ export default function TeacherDashboardPage() {
     setDeletingId(null);
     setConfirmingDeleteId(null);
     if (error) {
-      setActionError("تعذّر حذف الطالب. حاولي مرة أخرى.");
+      setActionError("تعذّر حذف الطالب. حاول مرة أخرى.");
       return;
     }
     loadDashboard();
@@ -410,7 +410,7 @@ export default function TeacherDashboardPage() {
   ];
 
   const classChip = classId ? (
-    <div className="inline-flex items-center gap-2 rounded-2xl bg-white/15 backdrop-blur px-3.5 py-2">
+    <div className="inline-flex items-center gap-2 rounded-2xl bg-sand-100 ring-1 ring-sand-200 px-3.5 py-2.5">
       {editingClassName ? (
         <>
           <input
@@ -429,12 +429,12 @@ export default function TeacherDashboardPage() {
         </>
       ) : (
         <>
-          <UsersIcon className="w-4 h-4 text-teach-100" />
-          <span className="text-sm font-extrabold text-white">الصف: {className}</span>
+          <UsersIcon className="w-4 h-4 text-teach-400" />
+          <span className="text-sm font-extrabold text-ink-900">الصف: {className}</span>
           <button
             onClick={startEditingClassName}
             aria-label="تعديل اسم الصف"
-            className="text-teach-100 hover:text-white transition-colors"
+            className="text-ink-400 hover:text-teach-600 transition-colors"
           >
             <PencilIcon className="w-3.5 h-3.5" />
           </button>
@@ -447,14 +447,14 @@ export default function TeacherDashboardPage() {
     <>
       <button
         onClick={() => setShowAddTask(true)}
-        className="flex items-center gap-1.5 text-sm font-extrabold text-teach-700 bg-white hover:bg-sand-50 px-4 py-2.5 rounded-2xl shadow-soft transition-colors"
+        className="flex items-center gap-1.5 text-sm font-extrabold text-white bg-palm-500 hover:bg-palm-600 px-5 py-2.5 rounded-2xl shadow-soft transition-colors"
       >
         <PlusIcon className="w-4 h-4" />
         مهمة جديدة
       </button>
       <button
         onClick={() => setShowAddStudent(true)}
-        className="flex items-center gap-1.5 text-sm font-extrabold text-white bg-white/15 hover:bg-white/25 px-4 py-2.5 rounded-2xl transition-colors"
+        className="flex items-center gap-1.5 text-sm font-extrabold text-teach-700 bg-white hover:bg-teach-50 ring-1 ring-teach-100 px-5 py-2.5 rounded-2xl transition-colors"
       >
         <PlusIcon className="w-4 h-4" />
         إضافة طالب
@@ -529,7 +529,7 @@ export default function TeacherDashboardPage() {
           <img src={logoMark} alt="بنيان الرياضيات" className="w-10 h-10 object-contain shrink-0" />
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-extrabold text-slate-900 truncate">بنيان الرياضيات</h1>
-            <p className="text-[11px] font-bold text-slate-500">لوحة المعلمة</p>
+            <p className="text-[11px] font-bold text-slate-500">لوحة المعلم</p>
           </div>
           <button
             onClick={handleSignOut}
@@ -548,7 +548,7 @@ export default function TeacherDashboardPage() {
 
         {!isSupabaseConfigured && (
           <section className="bg-sun-50 rounded-3xl p-6 text-sm font-bold text-slate-700 leading-relaxed">
-            لوحة المعلمة غير متصلة بمصدر بيانات حاليًا، لذلك لا يمكن عرض طلاب حقيقيين هنا.
+            لوحة المعلم غير متصلة بمصدر بيانات حاليًا، لذلك لا يمكن عرض طلاب حقيقيين هنا.
           </section>
         )}
 
@@ -580,8 +580,8 @@ export default function TeacherDashboardPage() {
 
         {!loading && !loadError && !classId && isSupabaseConfigured && (
           <section className="bg-white rounded-3xl shadow-soft p-6 sm:p-10 flex flex-col items-center text-center gap-3">
-            <h3 className="text-lg font-extrabold text-slate-900">مرحبًا بكِ في بنيان الرياضيات 👋</h3>
-            <p className="text-sm text-slate-500">ابدئي بإدارة صفك وإضافة طلابك.</p>
+            <h3 className="text-lg font-extrabold text-slate-900">مرحبًا بك في بنيان الرياضيات 👋</h3>
+            <p className="text-sm text-slate-500">ابدأ بإدارة صفك وإضافة طلابك.</p>
           </section>
         )}
 
@@ -591,7 +591,7 @@ export default function TeacherDashboardPage() {
             <EmptyState
               icon={<UsersIcon className="w-7 h-7" />}
               title="صفك جاهز 🎉"
-              hint="أضيفي طلابك للبدء، وستظهر هنا مهامهم ونجومهم ونتائجهم."
+              hint="أضف طلابك للبدء، وستظهر هنا مهامهم ونجومهم ونتائجهم."
               action={
                 <button
                   onClick={() => setShowAddStudent(true)}
@@ -612,7 +612,7 @@ export default function TeacherDashboardPage() {
           <>
             {/* شريط التبويبات — يبقى ظاهرًا أثناء التمرير */}
             <nav
-              aria-label="أقسام لوحة المعلمة"
+              aria-label="أقسام لوحة المعلم"
               className="sticky top-0 z-30 -mx-4 sm:mx-0 px-4 sm:px-0 py-2 bg-gradient-to-b from-teach-50/95 to-teach-50/80 backdrop-blur"
             >
               <div
@@ -673,7 +673,7 @@ export default function TeacherDashboardPage() {
                       icon={<TrophyIcon className="w-5 h-5" />}
                       tone="lilac"
                       title="المبادرات"
-                      subtitle="كم طالبة أكملت كل مبادرة"
+                      subtitle="كم طالبًا أكمل كل مبادرة"
                     />
                     <ul className="flex flex-col gap-3 list-none">
                       {activeInitiatives.map((init) => {
@@ -747,7 +747,7 @@ export default function TeacherDashboardPage() {
                     icon={<ClipboardCheckIcon className="w-5 h-5" />}
                     tone="mint"
                     title="آخر المهام"
-                    subtitle="أحدث ما أضفتِه لطلابك"
+                    subtitle="أحدث ما أضفته لطلابك"
                     action={
                       <button
                         onClick={() => setTab("tasks")}
@@ -760,8 +760,8 @@ export default function TeacherDashboardPage() {
                   {tasks.length === 0 ? (
                     <EmptyState
                       icon={<ClipboardCheckIcon className="w-7 h-7" />}
-                      title="لم تضيفي أي مهمة بعد."
-                      hint="ابدئي بمهمة صغيرة واجعلي طلابك ينطلقون."
+                      title="لم تضف أي مهمة بعد."
+                      hint="ابدأ بمهمة صغيرة واجعل طلابك ينطلقون."
                       action={
                         <button
                           onClick={() => setShowAddTask(true)}
@@ -920,8 +920,8 @@ export default function TeacherDashboardPage() {
                 {tasks.length === 0 ? (
                   <EmptyState
                     icon={<ClipboardCheckIcon className="w-7 h-7" />}
-                    title="لم تضيفي أي مهمة لهذا الأسبوع بعد."
-                    hint="ابدئي بمهمة صغيرة واجعلي طلابك ينطلقون."
+                    title="لم تضف أي مهمة لهذا الأسبوع بعد."
+                    hint="ابدأ بمهمة صغيرة واجعل طلابك ينطلقون."
                   />
                 ) : (
                   <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 list-none">{tasks.map(renderTaskCard)}</ul>
@@ -1009,7 +1009,7 @@ export default function TeacherDashboardPage() {
 
       {studentBeingDeleted && (
         <ConfirmDialog
-          title="هل أنتِ متأكدة من حذف هذا الطالب؟"
+          title="هل أنت متأكد من حذف هذا الطالب؟"
           description="سيتم إزالة الطالب من صفك."
           confirmLabel="حذف الطالب"
           loading={deletingId === studentBeingDeleted.id}
@@ -1020,7 +1020,7 @@ export default function TeacherDashboardPage() {
 
       {taskBeingDeleted && (
         <ConfirmDialog
-          title="هل أنتِ متأكدة من حذف هذه المهمة؟"
+          title="هل أنت متأكد من حذف هذه المهمة؟"
           description="سيتم إلغاء تعيينها عن جميع الطلاب."
           confirmLabel="حذف المهمة"
           onConfirm={() => handleDeleteTask(taskBeingDeleted.id)}

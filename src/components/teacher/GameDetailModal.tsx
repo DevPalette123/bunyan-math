@@ -57,7 +57,7 @@ export default function GameDetailModal({ studentId, studentName, gameId, onClos
         {loading ? (
           <p className="text-sm text-slate-500">جارٍ التحميل...</p>
         ) : !detail ? (
-          <p className="text-sm text-slate-500">لم تلعب هذه الطالبة «{theme.title}» بعد.</p>
+          <p className="text-sm text-slate-500">لم يلعب هذا الطالب «{theme.title}» بعد.</p>
         ) : (
           <div className="flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-3">

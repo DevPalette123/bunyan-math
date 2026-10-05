@@ -1,4 +1,4 @@
-// قسم «🏆 المسابقات» في لوحة المعلمة — قائمة مسابقاتها بأعداد مشاركين حقيقية.
+// قسم «🏆 المسابقات» في لوحة المعلم — قائمة مسابقاتها بأعداد مشاركين حقيقية.
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -26,7 +26,7 @@ export default function CompetitionsSection() {
 
   const load = useCallback(async () => {
     setError(null);
-    try { setItems(await listMyCompetitions()); } catch { setError("تعذّر تحميل المسابقات. حاولي مرة أخرى."); }
+    try { setItems(await listMyCompetitions()); } catch { setError("تعذّر تحميل المسابقات. حاول مرة أخرى."); }
   }, []);
   useEffect(() => { load(); }, [load]);
 
@@ -61,8 +61,8 @@ export default function CompetitionsSection() {
       )}
       {!error && items === null && <p className="text-center text-sm font-bold text-slate-500 py-8">جارٍ التحميل...</p>}
       {items && items.length === 0 && (
-        <EmptyState icon={<TrophyIcon className="w-7 h-7" />} title="لم تنشئي أي مسابقة بعد."
-          hint="أنشئي مسابقة، انشريها، ثم شاركي رابطها مع أي شخص."
+        <EmptyState icon={<TrophyIcon className="w-7 h-7" />} title="لم تنشئ أي مسابقة بعد."
+          hint="أنشئ مسابقة، انشريها، ثم شارك رابطها مع أي شخص."
           action={newBtn} />
       )}
 

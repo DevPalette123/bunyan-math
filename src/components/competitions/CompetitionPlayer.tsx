@@ -1,4 +1,4 @@
-// تجربة المشارك — تُستخدم في الصفحة العامة /competition/:slug وفي «المعاينة» للمعلمة.
+// تجربة المشارك — تُستخدم في الصفحة العامة /competition/:slug وفي «المعاينة» للمعلم.
 // مستقلة بصريًا ووظيفيًا عن واجهة الطالب: لا شريط تنقل، لا نجوم، لا شارات.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {

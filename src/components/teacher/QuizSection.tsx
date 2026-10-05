@@ -17,7 +17,7 @@ interface QuizSectionProps {
   students: RosterStudent[];
 }
 
-// نتائج «اختبر» للمعلمة — نفس أسلوب قسم «اكتشف» تمامًا (أرقام حقيقية فقط من
+// نتائج «اختبر» للمعلم — نفس أسلوب قسم «اكتشف» تمامًا (أرقام حقيقية فقط من
 // quiz_attempts، بلا بطاقات وهمية)، مع إظهار من لم تُجرِ الاختبار بعد.
 export default function QuizSection({ students }: QuizSectionProps) {
   const [overview, setOverview] = useState<Map<string, TeacherQuizRow> | null>(null);
@@ -74,7 +74,7 @@ export default function QuizSection({ students }: QuizSectionProps) {
         icon={<ClipboardCheckIcon className="w-5 h-5" />}
         tone="lilac"
         title="نتائج «اختبر»"
-        subtitle="آخر نتيجة لكل طالبة وعدد المحاولات"
+        subtitle="آخر نتيجة لكل طالب وعدد المحاولات"
       />
 
       {overview === null ? (
@@ -82,8 +82,8 @@ export default function QuizSection({ students }: QuizSectionProps) {
       ) : rows.length === 0 ? (
         <EmptyState
           icon={<ClipboardCheckIcon className="w-7 h-7" />}
-          title="لم تُجرِ أي طالبة اختبار «اختبر» بعد."
-          hint="ستظهر هنا النتائج فور إجراء الطالبات للاختبار."
+          title="لم يُجرِ أي طالب اختبار «اختبر» بعد."
+          hint="ستظهر هنا النتائج فور إجراء الطلاب للاختبار."
         />
       ) : (
         <div className="flex flex-col gap-7">
@@ -92,7 +92,7 @@ export default function QuizSection({ students }: QuizSectionProps) {
               tone="teach"
               value={toArabicDigits(stats!.completedCount)}
               suffix={<span className="text-sm text-teach-400"> / {toArabicDigits(students.length)}</span>}
-              label="أجرين الاختبار"
+              label="أجروا الاختبار"
             />
             <StatTile tone="mint" value={`${toArabicDigits(stats!.averagePercent)}٪`} label="متوسط آخر نتيجة" />
             <StatTile tone="sun" value={toArabicDigits(stats!.totalAttempts)} label="إجمالي المحاولات" />
@@ -129,7 +129,7 @@ export default function QuizSection({ students }: QuizSectionProps) {
 
           {notStarted.length > 0 && (
             <div className="bg-slate-50 rounded-2xl p-4">
-              <h4 className="text-xs font-extrabold text-slate-500 mb-2.5">لم يجرين الاختبار بعد</h4>
+              <h4 className="text-xs font-extrabold text-slate-500 mb-2.5">لم يجروا الاختبار بعد</h4>
               <div className="flex flex-wrap gap-1.5">
                 {notStarted.map((s) => (
                   <span key={s.id} className="text-[11px] font-bold text-slate-600 bg-white rounded-full px-3 py-1">
@@ -149,7 +149,7 @@ export default function QuizSection({ students }: QuizSectionProps) {
             </h4>
             {!stats || stats.needsSupport.length === 0 ? (
               <p className="text-xs font-bold text-slate-500 bg-slate-50 rounded-2xl px-4 py-3">
-                لا توجد مهارة ضعيفة مشتركة بين طالباتك حاليًا.
+                لا توجد مهارة ضعيفة مشتركة بين طلابك حاليًا.
               </p>
             ) : (
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 list-none">
@@ -167,7 +167,7 @@ export default function QuizSection({ students }: QuizSectionProps) {
                       </span>
                       <span className="flex items-center gap-1 text-[11px] font-extrabold text-rose-500 bg-rose-50 rounded-full px-2.5 py-1 shrink-0">
                         <UsersIcon className="w-3.5 h-3.5" />
-                        {toArabicDigits(names.length)} {names.length > 2 ? "طالبات" : names.length === 2 ? "طالبتان" : "طالبة"}
+                        {toArabicDigits(names.length)} {names.length > 2 ? "طلاب" : names.length === 2 ? "طالبان" : "طالب"}
                       </span>
                     </button>
                     {expandedSkill === skill && (

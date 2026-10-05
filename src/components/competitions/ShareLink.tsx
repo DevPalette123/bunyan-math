@@ -86,9 +86,9 @@ export default function ShareLink({
 
       {local && (
         <p role="note" className="text-xs font-bold text-amber-700 bg-amber-50 rounded-2xl px-4 py-3 leading-relaxed">
-          ⚠️ هذا رابط محلي ({host}) ولن يفتح عند أي شخص آخر. انشري الموقع على الإنترنت، واضبطي
+          ⚠️ هذا رابط محلي ({host}) ولن يفتح عند أي شخص آخر. انشر الموقع على الإنترنت، واضبط
           <span dir="ltr" className="mx-1 font-extrabold">VITE_PUBLIC_SITE_URL</span>
-          بعنوانه، ثم أعيدي نسخ الرابط.
+          بعنوانه، ثم أعد نسخ الرابط.
         </p>
       )}
 

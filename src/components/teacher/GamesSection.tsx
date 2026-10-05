@@ -21,8 +21,8 @@ interface GamesSectionProps {
 
 const skillName = (id: string) => playGames.find((g) => g.id === id)?.title ?? id;
 
-// نتائج ألعاب «ألعب» للمعلمة — قراءة فقط. لكل مهارة لعبة بفكرة مختلفة (data/funGames.ts)،
-// والنتائج حقيقية من جدول fun_game_results (نجوم ١–٣، أخطاء، مدة)؛ لا شيء للطالبات اللواتي لم يلعبن.
+// نتائج ألعاب «ألعب» للمعلم — قراءة فقط. لكل مهارة لعبة بفكرة مختلفة (data/funGames.ts)،
+// والنتائج حقيقية من جدول fun_game_results (نجوم ١–٣، أخطاء، مدة)؛ لا شيء للطلاب الذين لم يلعبوا.
 export default function GamesSection({ students }: GamesSectionProps) {
   const [overview, setOverview] = useState<Map<string, Partial<Record<FunGameId, TeacherFunRow>>> | null>(null);
   const [activeGame, setActiveGame] = useState<FunGameId>(funGames[0].id);
@@ -62,7 +62,7 @@ export default function GamesSection({ students }: GamesSectionProps) {
         icon={<PlayGameIcon className="w-5 h-5" />}
         tone="lilac"
         title="نتائج الألعاب"
-        subtitle="متابعة للنتائج فقط — المعلمة لا تبدأ اللعبة"
+        subtitle="متابعة للنتائج فقط — المعلم لا تبدأ اللعبة"
       />
 
       <div className="flex flex-wrap gap-2 mb-4">
@@ -94,8 +94,8 @@ export default function GamesSection({ students }: GamesSectionProps) {
       ) : rows.length === 0 ? (
         <EmptyState
           icon={<PlayGameIcon className="w-7 h-7" />}
-          title={`لم تلعب أي طالبة «${game.title}» بعد.`}
-          hint="ستظهر هنا النتائج فور لعب الطالبات."
+          title={`لم يلعب أي طالب «${game.title}» بعد.`}
+          hint="ستظهر هنا النتائج فور لعب الطلاب."
         />
       ) : (
         <div className="flex flex-col gap-6">

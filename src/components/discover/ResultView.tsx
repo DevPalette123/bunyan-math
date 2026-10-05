@@ -26,7 +26,7 @@ interface ResultViewProps {
 const LEVEL_HEADLINE: Record<string, string> = {
   "متقن": "أحسنت! أداء متقن",
   "جيد": "أداء جيد جدًا",
-  "في طور التقدم": "أنتِ في طور التقدم",
+  "في طور التقدم": "أنت في طور التقدم",
   "يحتاج إلى تأسيس": "بداية طيبة، ونواصل التأسيس معًا",
 };
 
@@ -91,7 +91,7 @@ export default function ResultView({ result, skills, review, onDone }: ResultVie
             نقاط قوتك
           </h3>
           {strong.length === 0 ? (
-            <p className="text-xs text-ink-500">لا توجد بعد مهارة وصلت إلى مستوى "متقن" — واصلي التدريب!</p>
+            <p className="text-xs text-ink-500">لا توجد بعد مهارة وصلت إلى مستوى "متقن" — واصل التدريب!</p>
           ) : (
             <ul className="flex flex-col gap-1.5 list-none">
               {strong.map((s) => (

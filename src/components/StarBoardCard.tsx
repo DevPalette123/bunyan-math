@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { toArabicDigits } from "../utils/arabicNumerals";
 
-// بطاقة «لوحة النجوم المرحة» في رئيسية الطالبة: تعرض عدد النجوم التي منحتها
-// المعلمة لها على اللوحة الصفّية. الرقم هنا هو نفسه الرقم الحقيقي القادم من
+// بطاقة «لوحة النجوم المرحة» في رئيسية الطالب: تعرض عدد النجوم التي منحتها
+// المعلم لها على اللوحة الصفّية. الرقم هنا هو نفسه الرقم الحقيقي القادم من
 // star_board_entries (fetchMyStarCount) — لا نُنشئ أي رقم من عندنا.
 
 interface StarBoardCardProps {
@@ -20,10 +20,10 @@ function pluralWord(n: number): string {
 }
 
 function messageFor(n: number): string {
-  if (n === 0) return "لم تصلكِ نجمة بعد. شاركي وتعاوني مع زميلاتكِ، وستضيء معلمتكِ أول نجومكِ!";
-  if (n < 5) return "بداية جميلة! كل نجمة تعني أنكِ تميّزتِ في الصف.";
-  if (n < 10) return "ما شاء الله! نجومكِ تزداد يومًا بعد يوم.";
-  return "أنتِ من نجمات الصف اللامعات، استمري!";
+  if (n === 0) return "لم تصلك نجمة بعد. شارك وتعاون مع زملائك، وسيضيء معلمك أول نجومك!";
+  if (n < 5) return "بداية جميلة! كل نجمة تعني أنك تميّزت في الصف.";
+  if (n < 10) return "ما شاء الله! نجومك تزداد يومًا بعد يوم.";
+  return "أنت من نجوم الصف اللامعين، استمر!";
 }
 
 /** عدّاد يصعد من ٠ إلى الرقم الحقيقي مرة واحدة عند ظهور البطاقة. */
@@ -57,7 +57,7 @@ export default function StarBoardCard({ count }: StarBoardCardProps) {
 
   return (
     <section
-      aria-label={`لديكِ ${count} ${pluralWord(count)} على لوحة النجوم المرحة`}
+      aria-label={`لديك ${count} ${pluralWord(count)} على لوحة النجوم المرحة`}
       className="relative overflow-hidden rounded-3xl shadow-soft animate-pop-in [animation-delay:420ms]"
       style={{ background: "linear-gradient(120deg,#FFF3CF 0%,#FFF9E8 55%,#FFFFFF 100%)" }}
     >
@@ -113,7 +113,7 @@ export default function StarBoardCard({ count }: StarBoardCardProps) {
 
           <p className="text-xs sm:text-sm font-bold text-ink-500 leading-relaxed max-w-md">{messageFor(count)}</p>
 
-          {/* شريط النجوم: تضيء بعدد نجوم الطالبة (حتى ١٠) */}
+          {/* شريط النجوم: تضيء بعدد نجوم الطالب (حتى ١٠) */}
           <div className="flex items-center gap-1 sm:gap-1.5 mt-1" aria-hidden="true">
             {Array.from({ length: SLOTS }).map((_, i) => {
               const on = i < lit;

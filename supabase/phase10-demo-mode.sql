@@ -1,9 +1,9 @@
 -- ============================================================================
 -- المرحلة العاشرة — «وضع التدشين / التجربة»
 --
--- الفكرة: لا نسخة Demo من بنيان. حسابات Supabase Auth حقيقية (معلمة + ست طالبات
+-- الفكرة: لا نسخة Demo من بنيان. حسابات Supabase Auth حقيقية (معلم + ست طلاب
 -- لكل «Slot») تعمل على نفس الجداول والدوال وRLS الحالية، وعزلها يأتي من الملكية
--- (المعلمة تملك صفها فقط). هذا الملف لا يغيّر أي جدول أو دالة أو سياسة موجودة،
+-- (المعلم تملك صفها فقط). هذا الملف لا يغيّر أي جدول أو دالة أو سياسة موجودة،
 -- ولا يضيف أعمدة لأي جدول قائم.
 --
 -- ما يضيفه:
@@ -14,7 +14,7 @@
 --   * دوال للخادم فقط (service_role): claim / rate / seed / retire-list.
 --
 -- التعبئة التجريبية تتم باستدعاء دوال النظام الحقيقية نفسها (complete_lesson،
--- start/record/complete للاختبارات والألعاب، ...) بهوية الطالبة التجريبية، فتخرج
+-- start/record/complete للاختبارات والألعاب، ...) بهوية الطالب التجريبية، فتخرج
 -- النجوم والشارات والنتائج بمنطق المنصة الفعلي دون إدخال صفوف يدوية أو أعمدة جديدة.
 --
 -- آمن لإعادة التشغيل. الوضع الافتراضي: معطّل (enabled = false) حتى تفعّليه بنفسك:
@@ -395,12 +395,12 @@ begin
   perform public.demo_play_game('addition', 7);
   perform public.record_fun_game_result('ascending-order', 2, 2, 90);
 
-  -- ---- مهام الصف + تكليفاتها (نفس الجدولين اللذين تكتب فيهما واجهة المعلمة) --------
+  -- ---- مهام الصف + تكليفاتها (نفس الجدولين اللذين تكتب فيهما واجهة المعلم) --------
   perform set_config('request.jwt.claim.sub', '', true);
   perform set_config('request.jwt.claims', '', true);
 
   insert into public.tasks (class_id, teacher_id, title, description, task_type, points, due_date)
-  values (p_class, p_teacher, 'أكملي درس الجمع', 'ادخلي إلى «تعلّم» وأكملي درس الجمع حتى النهاية.', 'general', 5, (current_date + 3))
+  values (p_class, p_teacher, 'أكمل درس الجمع', 'ادخل إلى «تعلّم» وأكمل درس الجمع حتى النهاية.', 'general', 5, (current_date + 3))
   returning id into v_task1;
   insert into public.tasks (class_id, teacher_id, title, description, task_type, points, due_date)
   values (p_class, p_teacher, 'تدريب هذا الأسبوع', 'حلّي ورقة عمل واحدة على الأقل من «تدرّب».', 'general', 3, (current_date + 6))
@@ -425,7 +425,7 @@ begin
   perform set_config('request.jwt.claim.sub', '', true);
   perform set_config('request.jwt.claims', '', true);
 
-  -- ---- لوحة نجوم الحصة (تديرها المعلمة يدويًا، منفصلة عن رصيد الطالبة) -----------------
+  -- ---- لوحة نجوم الحصة (تديرها المعلم يدويًا، منفصلة عن رصيد الطالب) -----------------
   insert into public.star_board_entries (class_id, student_id, display_name, stars)
   select p_class, st.id, pr.full_name,
     case (select x.key from jsonb_each_text(v_ids) x where (x.value)::uuid = st.id)

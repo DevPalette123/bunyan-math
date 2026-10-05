@@ -77,7 +77,7 @@ export default function QuizDetailModal({ studentId, studentName, onClose }: Qui
         {loading ? (
           <p className="text-sm text-slate-500">جارٍ التحميل...</p>
         ) : !detail ? (
-          <p className="text-sm text-slate-500">لم تُجرِ هذه الطالبة اختبار «اختبر» بعد.</p>
+          <p className="text-sm text-slate-500">لم يُجرِ هذا الطالب اختبار «اختبر» بعد.</p>
         ) : (
           <div className="flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-3">

@@ -29,7 +29,7 @@ export default function DoublingVisual({ visual, theme, revealed, correctAnswer 
 
   return (
     <div dir="rtl" className="w-full flex flex-col items-center gap-4">
-      <p className="text-sm sm:text-base font-extrabold text-ink-500">أوجدي ضعف العدد</p>
+      <p className="text-sm sm:text-base font-extrabold text-ink-500">أوجد ضعف العدد</p>
       <div className="flex items-center gap-3 sm:gap-4">
         <Pod big />
         <span className="font-extrabold text-2xl sm:text-3xl text-ink-300">←</span>

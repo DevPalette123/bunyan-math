@@ -3,7 +3,7 @@ import { toArabicDigits as d } from "../../../utils/arabicNumerals";
 import { rnd, shuffle } from "./funUtils";
 import { Burst, Progress, Stage, Talk } from "./kit/ui";
 import { useEngine } from "./kit/useEngine";
-import type { FunGameProps } from "./types";
+import type { FunGameProps, FunLevel } from "./types";
 
 // الزوجي والفردي: الأرنب يوصّل الطرد إلى البيت الصحيح — بيت الزوجي أو بيت الفردي.
 type Key = "even" | "odd";
@@ -14,10 +14,19 @@ function gen(lo: number, hi: number, parity: 0 | 1): number {
   return v + 1 <= hi ? v + 1 : v - 1;
 }
 
-function makeRounds(): number[] {
+// المستويات: ١ مبتدئ (رقم واحد) · ٢ متوسط (رقمان) · ٣ متقدم (ثلاثة أرقام).
+// ٨ طرود في كل مستوى: ٤ زوجية و٤ فردية، بلا تكرار لنفس العدد.
+function makeRounds(level: FunLevel): number[] {
+  if (level === 1) return shuffle([2, 4, 6, 8, ...shuffle([1, 3, 5, 7, 9]).slice(0, 4)]);
+  const [lo, hi] = level === 2 ? [10, 99] : [100, 999];
   const parities = shuffle<0 | 1>([0, 0, 0, 0, 1, 1, 1, 1]);
-  const ranges: [number, number][] = [[2, 9], [10, 99], [10, 99], [10, 99], [100, 999], [100, 999], [100, 999], [10, 99]];
-  return parities.map((p, k) => gen(ranges[k][0], ranges[k][1], p));
+  const out: number[] = [];
+  for (const p of parities) {
+    let v = gen(lo, hi, p);
+    for (let g = 0; g < 30 && out.includes(v); g++) v = gen(lo, hi, p);
+    out.push(v);
+  }
+  return out;
 }
 
 const HOUSES: { key: Key; label: string; chips: string; roof: string; wall: string; side: number }[] = [
@@ -25,8 +34,8 @@ const HOUSES: { key: Key; label: string; chips: string; roof: string; wall: stri
   { key: "odd", label: "فردي", chips: "١ ٣ ٥ ٧ ٩", roof: "#D6486E", wall: "#FDE7EE", side: -1 },
 ];
 
-export default function BalloonPop({ accent, accentDark, onDone }: FunGameProps) {
-  const nums = useMemo(makeRounds, []);
+export default function BalloonPop({ accent, accentDark, level, onDone }: FunGameProps) {
+  const nums = useMemo(() => makeRounds(level), [level]);
   const e = useEngine({ total: nums.length, onDone, advanceMs: 1400 });
   const n = nums[e.i];
   const ans: Key = n % 2 === 0 ? "even" : "odd";
@@ -37,8 +46,8 @@ export default function BalloonPop({ accent, accentDark, onDone }: FunGameProps)
     <div className="w-full flex flex-col gap-4">
       <Progress i={e.i} total={nums.length} accent={accent} label="الطرد" />
       <Talk kind="bunny" mood={e.mood} accentDark={accentDark}>
-        <p className="text-sm sm:text-base">ساعدي الأرنب على توصيل الطرد إلى بيته</p>
-        <p className="text-xs text-ink-500 mt-0.5">انظري إلى رقم الآحاد 👀</p>
+        <p className="text-sm sm:text-base">ساعد الأرنب على توصيل الطرد إلى بيته</p>
+        <p className="text-xs text-ink-500 mt-0.5">انظر إلى رقم الآحاد 👀</p>
       </Talk>
 
       <Stage className="px-3 pt-6 pb-4" style={{ background: "linear-gradient(180deg,#FDE7EE 0%,#E9F4FB 100%)" }}>

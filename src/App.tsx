@@ -150,7 +150,7 @@ export default function App() {
           instead of a dead 404 — same spirit as the old wildcard route. */}
       <Route path="/student/*" element={<Navigate to="/student" replace />} />
 
-      {/* «المسابقات»: الصفحة العامة بلا حساب، وصفحات الإدارة للمعلمة فقط. */}
+      {/* «المسابقات»: الصفحة العامة بلا حساب، وصفحات الإدارة للمعلم فقط. */}
       <Route path="/competition/:slug" element={<CompetitionPage />} />
       <Route
         path="/teacher/competitions/new"

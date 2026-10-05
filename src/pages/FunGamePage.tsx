@@ -10,8 +10,8 @@ import SubtractBasket from "../components/play/fun/SubtractBasket";
 import RoundHill from "../components/play/fun/RoundHill";
 import InsertSlot from "../components/play/fun/InsertSlot";
 import BalanceScale from "../components/play/fun/BalanceScale";
-import type { FunGameProps } from "../components/play/fun/types";
-import { findFunGame, type FunGameId } from "../data/funGames";
+import type { FunGameProps, FunLevel } from "../components/play/fun/types";
+import { FUN_LEVELS, LEVEL_EXAMPLES, findFunGame, hasLevels, type FunGameId } from "../data/funGames";
 import { playGameFinishSound, playGameWelcomeSound } from "../lib/playSounds";
 import { recordFunGameResult } from "../lib/funGames";
 import { primeAudioForInteraction } from "../lib/sound";
@@ -29,15 +29,18 @@ const GAMES: Record<FunGameId, (p: FunGameProps) => ReactNode> = {
 };
 
 const MESSAGES: Record<1 | 2 | 3, string> = {
-  3: "رائع! أنتِ عبقرية الرياضيات 🌟",
-  2: "أحسنتِ! قريبة جدًا من ثلاث نجوم",
-  1: "أكملتِ اللعبة! حاولي مرة أخرى لتجمعي نجومًا أكثر",
+  3: "رائع! أنت عبقري الرياضيات 🌟",
+  2: "أحسنت! قريبة جدًا من ثلاث نجوم",
+  1: "أكملت اللعبة! حاول مرة أخرى لتجمع نجومًا أكثر",
 };
 
 export default function FunGamePage() {
   const { funId } = useParams<{ funId: string }>();
   const navigate = useNavigate();
   const game = findFunGame(funId);
+  const leveled = hasLevels(game?.id);
+  // null = لم تختر الطالب المستوى بعد (الألعاب ذات المستويات تبدأ بشاشة اختيار).
+  const [level, setLevel] = useState<FunLevel | null>(null);
   const [runId, setRunId] = useState(0);
   const [stars, setStars] = useState<1 | 2 | 3 | null>(null);
   const [save, setSave] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -78,6 +81,26 @@ export default function FunGamePage() {
     void persist();
   }
 
+  function chooseLevel(l: FunLevel) {
+    primeAudioForInteraction();
+    setLevel(l);
+    setStars(null);
+    setSave("idle");
+    setPoints(0);
+    startedAt.current = Date.now();
+    setRunId((n) => n + 1);
+    playGameWelcomeSound();
+    window.scrollTo({ top: 0 });
+  }
+
+  function changeLevel() {
+    setStars(null);
+    setSave("idle");
+    setPoints(0);
+    setLevel(null);
+    window.scrollTo({ top: 0 });
+  }
+
   function restart() {
     primeAudioForInteraction();
     setStars(null);
@@ -113,9 +136,48 @@ export default function FunGamePage() {
             <span className="w-10" aria-hidden="true" />
           </div>
 
-          {stars === null ? (
-            <div key={runId} className="w-full">
-              {GAMES[game.id]({ accent: game.accent, accentDark: game.accentDark, onDone: handleDone })}
+          {leveled && level === null ? (
+            <div className="w-full flex flex-col items-center gap-4 pt-2 fun-bounce-in">
+              <p className="text-sm sm:text-base font-extrabold text-ink-700 text-center">{game.tagline}</p>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-ink-900">اختر المستوى</h2>
+              <div className="w-full flex flex-col gap-3">
+                {FUN_LEVELS.map((lv) => (
+                  <button
+                    key={lv.id}
+                    type="button"
+                    onClick={() => chooseLevel(lv.id)}
+                    style={{ borderColor: game.accent }}
+                    className="w-full flex items-center gap-4 rounded-3xl bg-white border-2 border-b-[6px] active:translate-y-[3px] active:border-b-[3px] px-5 py-4 text-start shadow-soft transition-transform"
+                  >
+                    <span className="text-4xl shrink-0" aria-hidden="true">
+                      {lv.emoji}
+                    </span>
+                    <span className="flex-1 min-w-0 flex flex-col gap-0.5">
+                      <span className="text-lg font-extrabold" style={{ color: game.accentDark }}>
+                        {lv.label}
+                      </span>
+                      <span className="text-xs font-bold text-ink-500">{lv.hint}</span>
+                    </span>
+                    {LEVEL_EXAMPLES[game.id] && (
+                      <span
+                        className="shrink-0 rounded-2xl px-3 py-1.5 text-sm font-extrabold"
+                        style={{ backgroundColor: `${game.accent}1A`, color: game.accentDark }}
+                      >
+                        {LEVEL_EXAMPLES[game.id]![lv.id - 1]}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : stars === null ? (
+            <div key={runId} className="w-full flex flex-col gap-4">
+              {leveled && level !== null && (
+                <p className="self-center rounded-full bg-white/80 px-4 py-1 text-xs font-extrabold" style={{ color: game.accentDark }}>
+                  المستوى: {FUN_LEVELS[level - 1].label}
+                </p>
+              )}
+              {GAMES[game.id]({ accent: game.accent, accentDark: game.accentDark, level: level ?? 2, onDone: handleDone })}
             </div>
           ) : (
             <div className="w-full flex flex-col items-center gap-5 pt-8 fun-bounce-in text-center">
@@ -128,10 +190,10 @@ export default function FunGamePage() {
               </div>
               <p className="text-lg font-extrabold text-ink-900 leading-relaxed">{MESSAGES[stars]}</p>
               <p className="text-xs font-extrabold min-h-[1.25rem]" aria-live="polite">
-                {save === "saving" && <span className="text-ink-500">جارٍ حفظ نتيجتكِ...</span>}
+                {save === "saving" && <span className="text-ink-500">جارٍ حفظ نتيجتك...</span>}
                 {save === "saved" && (
                   <span className="text-palm-600">
-                    {points > 0 ? `تمّ الحفظ ✓ وأُضيفت ${points} نجوم لرصيدكِ` : "تمّ حفظ النتيجة ✓ (النجوم تُضاف لأول لعبة في اليوم)"}
+                    {points > 0 ? `تمّ الحفظ ✓ وأُضيفت ${points} نجوم لرصيدك` : "تمّ حفظ النتيجة ✓ (النجوم تُضاف لأول لعبة في اليوم)"}
                   </span>
                 )}
                 {save === "error" && (
@@ -144,14 +206,27 @@ export default function FunGamePage() {
                 )}
               </p>
               <div className="w-full max-w-xs flex flex-col gap-3">
+                {leveled && level !== null && (
+                  <p className="text-xs font-extrabold text-ink-500">المستوى: {FUN_LEVELS[level - 1].label}</p>
+                )}
                 <button
                   type="button"
                   onClick={restart}
                   style={{ backgroundColor: game.accent, borderColor: game.accentDark }}
                   className="rounded-2xl border-b-[6px] active:translate-y-[3px] active:border-b-[3px] text-white font-extrabold text-base px-8 py-3.5 transition-transform"
                 >
-                  العبي مرة أخرى
+                  العب مرة أخرى
                 </button>
+                {leveled && (
+                  <button
+                    type="button"
+                    onClick={changeLevel}
+                    className="rounded-2xl bg-white border-2 text-sm font-extrabold px-8 py-3"
+                    style={{ borderColor: game.accent, color: game.accentDark }}
+                  >
+                    تغيير المستوى
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => navigate("/play")}

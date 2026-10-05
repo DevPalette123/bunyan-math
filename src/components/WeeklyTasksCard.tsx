@@ -83,7 +83,7 @@ export default function WeeklyTasksCard({ tasks, onComplete, onViewAll }: Weekly
         <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 py-6">
           <p className="text-sm font-bold text-ink-700">لا توجد مهام هذا الأسبوع 🌟</p>
           <p className="text-xs text-ink-500">
-            عندما تعيّن لكِ معلمتكِ مهمة جديدة، ستظهر هنا فورًا.
+            عندما تعيّن لك معلمك مهمة جديدة، ستظهر هنا فورًا.
           </p>
         </div>
       ) : (
@@ -121,10 +121,10 @@ export default function WeeklyTasksCard({ tasks, onComplete, onViewAll }: Weekly
                 {task.status !== "done" &&
                   (isConfirming ? (
                     <div className="mt-3 flex flex-col gap-2 animate-rise-in">
-                      <p className="text-xs font-bold text-ink-700">هل أنجزتِ هذه المهمة فعلًا؟</p>
+                      <p className="text-xs font-bold text-ink-700">هل أنجزت هذه المهمة فعلًا؟</p>
                       {failedId === task.id && (
                         <p className="text-xs font-bold text-rose-500">
-                          حدث خطأ ولم يتم الحفظ. حاولي مرة أخرى.
+                          حدث خطأ ولم يتم الحفظ. حاول مرة أخرى.
                         </p>
                       )}
                       <div className="flex items-center gap-2">

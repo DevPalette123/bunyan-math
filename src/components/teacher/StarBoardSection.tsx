@@ -24,7 +24,7 @@ interface StarBoardSectionProps {
   students: RosterStudent[];
 }
 
-// أنغام هادئة من لوحة المعلمة تتكرر على البطاقات، وتبقى لمسة الذهب (النجمة وزر
+// أنغام هادئة من لوحة المعلم تتكرر على البطاقات، وتبقى لمسة الذهب (النجمة وزر
 // الإضافة) هي الشيء الوحيد الدافئ فيها — فتقرأ اللوحة منظّمة ولطيفة لا صاخبة.
 const CARD_THEMES = [
   { bg: "bg-teach-50", text: "text-teach-600", avatar: "bg-teach-100 text-teach-700" },
@@ -68,7 +68,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
 
   const totalStars = useMemo(() => (entries ?? []).reduce((sum, e) => sum + e.stars, 0), [entries]);
 
-  // مراكز أول ثلاث قيم مختلفة للنجوم (بالتساوي تتشارك الطالبات المركز نفسه).
+  // مراكز أول ثلاث قيم مختلفة للنجوم (بالتساوي تتشارك الطلاب المركز نفسه).
   const rankOf = useMemo(() => {
     const distinct = [...new Set((entries ?? []).map((e) => e.stars).filter((n) => n > 0))]
       .sort((a, b) => b - a)
@@ -89,7 +89,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
     const { error: addError } = await addStarBoardEntry(classId, student.id, student.full_name);
     setAdding(false);
     if (addError) {
-      setError("تعذّرت إضافة الطالبة. حاولي مرة أخرى.");
+      setError("تعذّرت إضافة الطالب. حاول مرة أخرى.");
       return;
     }
     setSelectedStudentId("");
@@ -103,7 +103,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
     const { error: addError } = await addStarBoardEntries(classId, availableStudents);
     setAdding(false);
     if (addError) {
-      setError("تعذّرت إضافة الطالبات. حدّثي الصفحة ثم حاولي مرة أخرى.");
+      setError("تعذّرت إضافة الطلاب. حدّث الصفحة ثم حاول مرة أخرى.");
       await load();
       return;
     }
@@ -153,7 +153,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
     setDeleting(false);
     setEntryToDelete(null);
     if (deleteError) {
-      setError("تعذّر الحذف. حاولي مرة أخرى.");
+      setError("تعذّر الحذف. حاول مرة أخرى.");
       return;
     }
     setEntries((prev) => prev?.filter((e) => e.id !== target.id) ?? prev);
@@ -165,7 +165,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
     setDeleting(false);
     setConfirmingDeleteAll(false);
     if (deleteError) {
-      setError("تعذّر حذف اللوحة. حاولي مرة أخرى.");
+      setError("تعذّر حذف اللوحة. حاول مرة أخرى.");
       return;
     }
     setEntries([]);
@@ -180,7 +180,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
           </span>
           <div className="min-w-0">
             <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 leading-tight">لوحة النجوم المرحة</h3>
-            <p className="text-xs font-bold text-slate-400 mt-0.5">لوحة تحفيزية بيدكِ وحدكِ</p>
+            <p className="text-xs font-bold text-slate-400 mt-0.5">لوحة تحفيزية بيدك وحدك</p>
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -202,7 +202,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
       </div>
 
       <p className="text-xs font-bold text-slate-500 leading-relaxed bg-slate-50 rounded-2xl px-4 py-3 mb-5">
-        هذه اللوحة منفصلة عن نجوم الإنجاز الحقيقية لكل طالبة — لا تتأثر بأي درس أو اختبار أو لعبة، وأنتِ من يتحكّم بها بالكامل هنا.
+        هذه اللوحة منفصلة عن نجوم الإنجاز الحقيقية لكل طالب — لا تتأثر بأي درس أو اختبار أو لعبة، وأنت من يتحكّم بها بالكامل هنا.
       </p>
 
       {availableStudents.length > 0 && (
@@ -211,10 +211,10 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
             <select
               value={selectedStudentId}
               onChange={(e) => setSelectedStudentId(e.target.value)}
-              aria-label="اختيار طالبة لإضافتها إلى اللوحة"
+              aria-label="اختيار طالب لإضافتها إلى اللوحة"
               className="flex-1 min-w-0 rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-teach-300 bg-white"
             >
-              <option value="">اختاري طالبة لإضافتها...</option>
+              <option value="">اختر طالبًا لإضافته...</option>
               {availableStudents.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.full_name}
@@ -235,7 +235,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
             disabled={adding}
             className="self-start text-xs font-extrabold text-teach-600 hover:bg-white disabled:opacity-50 rounded-lg px-3 py-1.5 transition-colors"
           >
-            {adding ? "جارٍ الإضافة..." : `إضافة كل الطالبات إلى اللوحة (${toArabicDigits(availableStudents.length)})`}
+            {adding ? "جارٍ الإضافة..." : `إضافة كل الطلاب إلى اللوحة (${toArabicDigits(availableStudents.length)})`}
           </button>
         </div>
       )}
@@ -251,8 +251,8 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
       ) : entries.length === 0 ? (
         <p className="text-sm text-slate-500 text-center py-6">
           {students.length === 0
-            ? "أضيفي طالبات إلى صفك أولًا، ثم تظهر أسماؤهن هنا لتوزيع النجوم."
-            : "لا توجد طالبات على اللوحة بعد — أضيفي الكل بضغطة واحدة أو اختاري طالبة من القائمة."}
+            ? "أضف طلابًا إلى صفك أولًا، ثم تظهر أسماؤهم هنا لتوزيع النجوم."
+            : "لا يوجد طلاب على اللوحة بعد — أضف الكل بضغطة واحدة أو اختر طالبًا من القائمة."}
         </p>
       ) : (
         <>
@@ -261,7 +261,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
               onClick={handleSortByStars}
               className="mb-4 text-xs font-extrabold text-teach-600 bg-teach-50 hover:bg-teach-100 rounded-full px-4 py-2 transition-colors"
             >
-              رتّبي حسب النجوم
+              رتّب حسب النجوم
             </button>
           )}
 
@@ -361,7 +361,7 @@ export default function StarBoardSection({ classId, students }: StarBoardSection
       {confirmingDeleteAll && (
         <ConfirmDialog
           title="حذف لوحة النجوم بالكامل؟"
-          description="سيُحذف كل الطالبات والنجوم في هذه اللوحة نهائيًا. لا يمكن التراجع عن هذا الإجراء."
+          description="سيُحذف كل الطلاب والنجوم في هذه اللوحة نهائيًا. لا يمكن التراجع عن هذا الإجراء."
           confirmLabel="حذف الكل"
           loading={deleting}
           onConfirm={handleDeleteAll}

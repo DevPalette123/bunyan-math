@@ -1,20 +1,20 @@
 -- ============================================================================
 -- المرحلة التاسعة — «المسابقات»
--- نظام مستقل تمامًا عن الطلاب والنجوم والشارات: المسابقة تُنشأ وتُنشر من المعلمة،
+-- نظام مستقل تمامًا عن الطلاب والنجوم والشارات: المسابقة تُنشأ وتُنشر من المعلم،
 -- ويشارك فيها أي شخص يملك الرابط (اسم + صف فقط) دون حساب.
 --
 -- شغّليه مرة واحدة في SQL Editor. آمن للتشغيل أكثر من مرة، ولا يلمس أي جدول
 -- أو دالة أو سياسة موجودة سابقًا (كل الأسماء الجديدة تبدأ بـ competition_).
 --
 -- مبدأ الأمان:
---   * الجداول كلها مقفلة على المتصفح: المعلمة (مالكة المسابقة) فقط تقرأ/تكتب.
+--   * الجداول كلها مقفلة على المتصفح: المعلم (مالكة المسابقة) فقط تقرأ/تكتب.
 --   * الزائر لا يصل لأي جدول مباشرة. يقرأ المسابقة عبر get_public_competition
 --     (لا تُرجع أي إجابة صحيحة) ويُرسل عبر submit_competition (التصحيح يتم داخل
 --     قاعدة البيانات، والزائر لا يقرأ شيئًا من مشاركات غيره).
 --   * ملفات الوسائط في Storage خاصة؛ تُقرأ فقط إذا كانت تخص مسابقة «منشورة».
 -- ============================================================================
 
--- 0) دالة مساعدة: هل المستخدم الحالي معلمة؟ ---------------------------------
+-- 0) دالة مساعدة: هل المستخدم الحالي معلم؟ ---------------------------------
 create or replace function public.is_teacher_user()
 returns boolean
 language sql
@@ -138,7 +138,7 @@ create index if not exists competition_submissions_key_idx
   on public.competition_submissions (competition_id, name_key);
 
 -- 7) إجابات كل مشاركة. تحمل لقطة (snapshot) من نص السؤال والإجابة الصحيحة وقت
---    الإرسال، حتى لا تتغير نتائج قديمة ولا تضيع إن عدّلت المعلمة المسابقة لاحقًا.
+--    الإرسال، حتى لا تتغير نتائج قديمة ولا تضيع إن عدّلت المعلم المسابقة لاحقًا.
 create table if not exists public.competition_answers (
   id uuid primary key default gen_random_uuid(),
   submission_id uuid not null references public.competition_submissions (id) on delete cascade,
@@ -232,7 +232,7 @@ grant select, insert, update, delete on public.competition_pages     to authenti
 grant select, insert, update, delete on public.competition_items     to authenticated;
 grant select, insert, update, delete on public.competition_questions to authenticated;
 grant select, insert, update, delete on public.competition_options   to authenticated;
--- المشاركات والإجابات: المعلمة تقرأ فقط (والحذف للمشاركة). لا إدخال من المتصفح إطلاقًا.
+-- المشاركات والإجابات: المعلم تقرأ فقط (والحذف للمشاركة). لا إدخال من المتصفح إطلاقًا.
 grant select, delete on public.competition_submissions to authenticated;
 grant select         on public.competition_answers     to authenticated;
 
@@ -802,7 +802,7 @@ grant execute on function public.submit_competition(text, text, text, jsonb, tim
 
 -- 15) ملفات الوسائط (صور / فيديو / PDF) في Storage ------------------------------
 --     الحاوية خاصة. المسار: <teacher_id>/<competition_id>/<uuid>.<ext>
---     * المعلمة ترفع/تقرأ/تحذف داخل مجلدها فقط.
+--     * المعلم ترفع/تقرأ/تحذف داخل مجلدها فقط.
 --     * الزائر يقرأ (عبر رابط موقّع قصير العمر) فقط ملفًا مرتبطًا بمسابقة «منشورة».
 --     SVG غير مسموح (يمكن أن يحمل سكربتات). الحد الأقصى 50 م.ب للملف.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)

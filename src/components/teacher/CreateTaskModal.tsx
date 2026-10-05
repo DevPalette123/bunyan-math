@@ -53,7 +53,7 @@ export default function CreateTaskModal({
     }
     const targetIds = assignAll ? students.map((s) => s.id) : selectedIds;
     if (targetIds.length === 0) {
-      setError("اختاري طالبًا واحدًا على الأقل، أو كل الطلاب.");
+      setError("اختر طالبًا واحدًا على الأقل، أو كل الطلاب.");
       return;
     }
 
@@ -77,7 +77,7 @@ export default function CreateTaskModal({
 
     if (taskError || !taskRow) {
       setSubmitting(false);
-      setError("تعذّر إنشاء المهمة. حاولي مرة أخرى.");
+      setError("تعذّر إنشاء المهمة. حاول مرة أخرى.");
       return;
     }
 

@@ -52,7 +52,7 @@ export default function GameResult({ theme, result, review, retrying = false, on
       {mistakes.length > 0 && (
         <details className="w-full rounded-[28px] bg-white p-5 sm:p-6 shadow-soft group">
           <summary className="flex items-center justify-between cursor-pointer list-none text-base font-extrabold text-ink-900 [&::-webkit-details-marker]:hidden">
-            راجعي المسائل التي أخطأتِ فيها
+            راجع المسائل التي أخطأت فيها
             <ChevronIcon className="w-4 h-4 transition-transform rotate-180 group-open:-rotate-90" />
           </summary>
           <div className="mt-4 flex flex-col gap-3">
@@ -81,7 +81,7 @@ export default function GameResult({ theme, result, review, retrying = false, on
           style={{ backgroundColor: theme.scene.accent, borderColor: theme.scene.accentDark }}
           className="rounded-2xl border-b-[6px] active:translate-y-[3px] active:border-b-[3px] disabled:opacity-60 disabled:pointer-events-none text-white font-extrabold text-base px-8 py-3.5 transition-[transform,background-color]"
         >
-          {retrying ? "جارٍ تجهيز اللعبة..." : "العبي مرة أخرى"}
+          {retrying ? "جارٍ تجهيز اللعبة..." : "العب مرة أخرى"}
         </button>
         <button
           type="button"

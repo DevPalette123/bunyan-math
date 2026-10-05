@@ -166,7 +166,7 @@ export default function StudentDashboardPage() {
           activityEvents.push({
             id: `task-${row.id}`,
             iconKey: "practice",
-            title: `أكملتِ مهمة: ${row.tasks?.title ?? ""}`,
+            title: `أكملت مهمة: ${row.tasks?.title ?? ""}`,
             at: row.completed_at,
           });
         }
@@ -175,7 +175,7 @@ export default function StudentDashboardPage() {
         activityEvents.push({
           id: `badge-${row.id}`,
           iconKey: "badges",
-          title: `حصلتِ على شارة ${row.badges?.name ?? ""}`,
+          title: `حصلت على شارة ${row.badges?.name ?? ""}`,
           at: row.earned_at,
         });
       }
@@ -184,7 +184,7 @@ export default function StudentDashboardPage() {
         activityEvents.push({
           id: `lesson-${row.id}`,
           iconKey: "lessons",
-          title: `أكملتِ درس: ${lessonTitle}`,
+          title: `أكملت درس: ${lessonTitle}`,
           at: row.completed_at,
         });
       }
@@ -193,7 +193,7 @@ export default function StudentDashboardPage() {
         activityEvents.push({
           id: `practice-${row.id}`,
           iconKey: "practice",
-          title: `أكملتِ تدريب: ${practiceTitle}`,
+          title: `أكملت تدريب: ${practiceTitle}`,
           at: row.completed_at,
         });
       }
@@ -202,7 +202,7 @@ export default function StudentDashboardPage() {
         activityEvents.push({
           id: `initiative-${row.id}`,
           iconKey: "initiatives",
-          title: `أكملتِ مبادرة: ${initiativeTitle}`,
+          title: `أكملت مبادرة: ${initiativeTitle}`,
           at: row.completed_at,
         });
       }
@@ -210,7 +210,7 @@ export default function StudentDashboardPage() {
         activityEvents.push({
           id: `discover-${levelSummary.attemptId}`,
           iconKey: "discover",
-          title: `أكملتِ اختبار تحديد المستوى — ${levelSummary.percentage}٪`,
+          title: `أكملت اختبار تحديد المستوى — ${levelSummary.percentage}٪`,
           at: levelSummary.completedAt,
         });
         setLevelPercent(levelSummary.percentage);
@@ -227,7 +227,7 @@ export default function StudentDashboardPage() {
         activityEvents.push({
           id: `quiz-${quizSummary.attemptId}`,
           iconKey: "quiz",
-          title: `أكملتِ اختبار «اختبر» — ${toArabicDigits(quizSummary.percentage)}٪`,
+          title: `أكملت اختبار «اختبر» — ${toArabicDigits(quizSummary.percentage)}٪`,
           at: quizSummary.completedAt,
         });
       }
@@ -236,7 +236,7 @@ export default function StudentDashboardPage() {
         activityEvents.push({
           id: `game-${g.attemptId}`,
           iconKey: "play",
-          title: `لعبتِ «${GAME_THEMES[g.gameId].title}» — ${toArabicDigits(g.percentage)}٪`,
+          title: `لعبت «${GAME_THEMES[g.gameId].title}» — ${toArabicDigits(g.percentage)}٪`,
           at: g.completedAt,
         });
       }

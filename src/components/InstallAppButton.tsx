@@ -114,7 +114,7 @@ export default function InstallAppButton({ className = "" }: { className?: strin
           role="note"
           className="mt-3 text-[11px] font-bold text-ink-700 bg-palm-50 rounded-xl px-3 py-2 leading-relaxed text-start"
         >
-          افتحي الرابط في متصفح Safari، ثم اضغطي زر المشاركة <span aria-hidden="true">⬆︎</span> واختاري
+          افتح الرابط في متصفح Safari، ثم اضغط زر المشاركة <span aria-hidden="true">⬆︎</span> واختر
           «إضافة إلى الشاشة الرئيسية».
         </p>
       )}

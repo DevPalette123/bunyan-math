@@ -42,7 +42,7 @@ create policy "practice_completions_select_own_teacher"
 -- ----------------------------------------------------------------------------
 -- (2) إكمال تدريب من «تدرّب» — نفس فلسفة complete_lesson تمامًا، بنقاط أقل (٣
 --     بدل ٥) لأن فتح/تنزيل ملف PDF إشارة أضعف من مشاهدة فيديو كامل حتى النهاية
---     (لا يوجد ما يثبت أن الطالبة فعلًا حلّت الورقة، فقط أنها فتحتها).
+--     (لا يوجد ما يثبت أن الطالب فعلًا حلّت الورقة، فقط أنها فتحتها).
 -- ----------------------------------------------------------------------------
 create or replace function public.complete_practice(p_practice_id text)
 returns void
@@ -74,9 +74,9 @@ revoke execute on function public.complete_practice(text) from public, anon;
 -- ----------------------------------------------------------------------------
 insert into public.badges (code, name, description, condition_type, condition_value) values
   ('game_starter', 'أول لعبة', 'يُمنح عند إكمال أول لعبة في «العب»', 'games_completed_count', 1),
-  ('game_master', 'بطلة الألعاب الثمان', 'يُمنح عند إكمال الألعاب الثماني كلها مرة واحدة على الأقل', 'games_completed_count', 8),
+  ('game_master', 'بطل الألعاب الثمان', 'يُمنح عند إكمال الألعاب الثماني كلها مرة واحدة على الأقل', 'games_completed_count', 8),
   ('practice_starter', 'أول تدريب', 'يُمنح عند فتح أول ورقة عمل في «تدرّب»', 'practice_completed_count', 1),
-  ('practice_master', 'بطلة التدريبات', 'يُمنح عند إتمام التدريبات الثمانية كلها', 'practice_completed_count', 8)
+  ('practice_master', 'بطل التدريبات', 'يُمنح عند إتمام التدريبات الثمانية كلها', 'practice_completed_count', 8)
 on conflict (code) do nothing;
 
 
@@ -84,7 +84,7 @@ on conflict (code) do nothing;
 -- (4) تحديث evaluate_and_award_badges (استبدال، وليس نظامًا جديدًا) — يبقى كل
 --     شرط قديم كما هو تمامًا، ويُضاف شرطا الألعاب والتدريبات إلى نفس المنطق
 --     الموحّد. games_completed_count = عدد الألعاب (game_id) المختلفة التي
---     أكملتها الطالبة ولو مرة واحدة، لا عدد محاولاتها الكلي.
+--     أكملتها الطالب ولو مرة واحدة، لا عدد محاولاتها الكلي.
 -- ----------------------------------------------------------------------------
 create or replace function public.evaluate_and_award_badges(target_student_id uuid)
 returns void
@@ -186,7 +186,7 @@ begin
     select 1 from public.game_attempt_questions
     where attempt_id = p_attempt_id and selected_answer is null
   ) then
-    raise exception 'أكملي كل الأسئلة أولًا';
+    raise exception 'أكمل كل الأسئلة أولًا';
   end if;
 
   select

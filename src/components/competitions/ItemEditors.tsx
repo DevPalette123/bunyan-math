@@ -1,4 +1,4 @@
-// محررات عناصر المسابقة (تظهر للمعلمة داخل المنشئ).
+// محررات عناصر المسابقة (تظهر للمعلم داخل المنشئ).
 import { useRef, useState } from "react";
 import {
   ACCEPT_BY_KIND, ATTACHMENT_KINDS, KIND_LABEL, MAX_ATTACHMENTS, MAX_UPLOAD_BYTES, emptyQuestion, getAttachments,
@@ -99,12 +99,12 @@ function QuestionEditor({ q, onChange }: { q: DraftQuestion; onChange: (q: Draft
     <div className="flex flex-col gap-4">
       <div>
         <label className={label}>نص السؤال</label>
-        <TextArea value={q.prompt} onChange={(v) => set({ prompt: v })} placeholder="اكتبي السؤال هنا" rows={2} />
+        <TextArea value={q.prompt} onChange={(v) => set({ prompt: v })} placeholder="اكتب السؤال هنا" rows={2} />
       </div>
 
       {q.qtype === "mcq" && (
         <div className="flex flex-col gap-2">
-          <label className={label}>الخيارات — اضغطي الدائرة لتحديد الإجابة الصحيحة</label>
+          <label className={label}>الخيارات — اضغط الدائرة لتحديد الإجابة الصحيحة</label>
           {q.options.map((o, i) => (
             <div key={o.id} className="flex items-center gap-2">
               <button type="button" aria-label="الإجابة الصحيحة" aria-pressed={o.is_correct}
@@ -202,7 +202,7 @@ function AttachmentsEditor({
           </div>
         )}
       </div>
-      {list.length === 0 && <p className="text-[11px] font-bold text-slate-400">أرفقي صورة أو فيديو أو ملف PDF أو رابطًا ليراه المشارك مع السؤال.</p>}
+      {list.length === 0 && <p className="text-[11px] font-bold text-slate-400">أرفق صورة أو فيديو أو ملف PDF أو رابطًا ليراه المشارك مع السؤال.</p>}
       {list.map((a, i) => (
         <div key={a.id} className="rounded-xl border border-slate-100 bg-slate-50/60 p-3 flex flex-col gap-2">
           <div className="flex items-center justify-between">
@@ -225,11 +225,11 @@ export default function ItemEditor({
 
   switch (item.kind) {
     case "heading":
-      return <input value={item.data.text ?? ""} onChange={(e) => patchData({ text: e.target.value })} maxLength={200} placeholder="اكتبي العنوان" className={`${field} text-base`} />;
+      return <input value={item.data.text ?? ""} onChange={(e) => patchData({ text: e.target.value })} maxLength={200} placeholder="اكتب العنوان" className={`${field} text-base`} />;
     case "text":
-      return <TextArea value={item.data.text ?? ""} onChange={(v) => patchData({ text: v })} placeholder="اكتبي النص هنا" rows={4} />;
+      return <TextArea value={item.data.text ?? ""} onChange={(v) => patchData({ text: v })} placeholder="اكتب النص هنا" rows={4} />;
     case "instructions":
-      return <TextArea value={item.data.text ?? ""} onChange={(v) => patchData({ text: v })} placeholder="مثال: اقرئي السؤال جيدًا قبل الإجابة" rows={2} />;
+      return <TextArea value={item.data.text ?? ""} onChange={(v) => patchData({ text: v })} placeholder="مثال: اقرأ السؤال جيدًا قبل الإجابة" rows={2} />;
     case "image":
     case "video":
     case "pdf":
@@ -244,7 +244,7 @@ export default function ItemEditor({
           </div>
           <div>
             <label className={label}>نص الرابط</label>
-            <input value={item.data.label ?? ""} onChange={(e) => patchData({ label: e.target.value })} maxLength={120} placeholder="مثال: اقرئي المزيد" className={field} />
+            <input value={item.data.label ?? ""} onChange={(e) => patchData({ label: e.target.value })} maxLength={120} placeholder="مثال: اقرأ المزيد" className={field} />
           </div>
         </div>
       );
