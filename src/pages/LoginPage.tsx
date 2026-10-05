@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import logoMark from "../assets/logo/logo-mark.png";
 import BrandFooter from "../components/BrandFooter";
+import DiscoverCard from "../components/DiscoverCard";
 import InstallAppButton from "../components/InstallAppButton";
 import SchoolLogo from "../components/SchoolLogo";
 import { useAuth } from "../context/AuthContext";
@@ -207,10 +208,10 @@ export default function LoginPage() {
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   className="rounded-2xl border border-sand-200 px-4 py-3 text-xl font-extrabold tracking-widest text-ink-900 text-center focus:outline-none focus:ring-2 focus:ring-palm-500"
-                  placeholder="BNY1"
+                  placeholder="Mo-12"
                 />
                 <span className="text-[11px] text-ink-500">
-                  اكتب رمزك: BNY ثم رقمك، مثل BNY1. اطلبيه من معلمك — لا حاجة لبريد إلكتروني أو كلمة مرور.
+                  اكتب رمزك: حرفان من اسمك ثم رقمان، مثل Mo-12. اطلبيه من معلمك — لا حاجة لبريد إلكتروني أو كلمة مرور.
                 </span>
               </label>
 
@@ -247,38 +248,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        {demoAvailable && (
-          <div className="mt-5 bg-white rounded-3xl shadow-soft p-5 text-center">
-            <p className="text-sm font-extrabold text-ink-900">اكتشف بنيان</p>
-            <p className="text-[11px] text-ink-500 mt-1 leading-relaxed">
-              جرّب المنصة كمعلم أو طالب بحساب وبيانات تجريبية — بدون بريد أو رمز.
-            </p>
-            <div className="grid grid-cols-2 gap-2 mt-4">
-              <button
-                type="button"
-                disabled={demoBusy !== null}
-                onClick={() => handleDemo("teacher")}
-                className="rounded-2xl bg-palm-50 hover:bg-palm-100 text-palm-600 disabled:opacity-60 font-extrabold text-sm py-3 transition-colors"
-              >
-                {demoBusy === "teacher" ? "جارٍ التجهيز..." : "🧑‍🏫 تجربة المعلم"}
-              </button>
-              <button
-                type="button"
-                disabled={demoBusy !== null}
-                onClick={() => handleDemo("student")}
-                className="rounded-2xl bg-palm-50 hover:bg-palm-100 text-palm-600 disabled:opacity-60 font-extrabold text-sm py-3 transition-colors"
-              >
-                {demoBusy === "student" ? "جارٍ التجهيز..." : "🧒 تجربة الطالب"}
-              </button>
-            </div>
-            {demoBusy && <p className="text-[11px] text-ink-500 mt-3">جارٍ تجهيز تجربتك… قد يستغرق ذلك بضع ثوانٍ.</p>}
-            {demoError && (
-              <p role="alert" className="mt-3 text-xs font-bold text-rose-500 bg-rose-50 rounded-xl px-3 py-2">
-                {demoError}
-              </p>
-            )}
-          </div>
-        )}
+        {demoAvailable && <DiscoverCard busy={demoBusy} error={demoError} onStart={handleDemo} />}
 
         <p className="text-[11px] text-ink-500 text-center mt-5 leading-relaxed">
           {tab === "teacher"

@@ -19,7 +19,6 @@ export default function TeacherHero({ teacherName, classSlot, actions }: Teacher
     <BrandHero
       image={teacherBanner}
       alt="منصة بنيان الرياضيات — نبني مهاراتنا ونعتز بهويتنا"
-      badge="لوحة المعلم"
       title={`مرحبًا بك، ${greetingName}`}
       subtitle="هنا يبدأ أثرك التعليمي ✨"
       actions={

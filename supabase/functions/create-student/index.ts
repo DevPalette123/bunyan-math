@@ -19,8 +19,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "../_shared/cors.ts";
 import {
-  CODE_PREFIX,
-  nextSequenceNumber,
+  generateNameCode,
+  nameCodePrefix,
+  normalizeStudentCode,
   studentCodePassword,
   studentCodeToEmail,
 } from "../_shared/studentCode.ts";
@@ -121,26 +122,26 @@ Deno.serve(async (req) => {
     let createdUserId: string | null = null;
     let finalCode = "";
 
-    // الرمز بسيط ليحفظه الطالب: BNY + رقم تسلسلي (BNY1، BNY2 …).
-    // الرقم هو أصغر رقم غير مستعمل في كل الجدول (الرمز فريد على مستوى المنصة).
-    // نقرأ الرموز على دفعات لأن PostgREST يقطع النتيجة عند ١٠٠٠ صف.
+    // الرمز بسيط ليحفظه الطالب: أول حرفين من اسمه + رقمان (Mo-12 لمحمد، Na-34 لناصر).
+    // الرمز فريد على مستوى المنصة، فنقرأ الرموز التي تبدأ بالحرفين نفسيهما ونختار رقمًا غير مستعمل.
+    // نقرأ على دفعات لأن PostgREST يقطع النتيجة عند ١٠٠٠ صف.
+    const prefix = nameCodePrefix(fullName);
     const existingCodes: string[] = [];
     for (let from = 0; ; from += 1000) {
       const { data: page } = await adminClient
         .from("students")
         .select("login_code")
-        .like("login_code", `${CODE_PREFIX}%`)
+        .ilike("login_code", `${prefix}%`)
         .order("login_code", { ascending: true })
         .range(from, from + 999);
       for (const r of page ?? []) if (r.login_code) existingCodes.push(r.login_code as string);
       if (!page || page.length < 1000) break;
     }
-    const triedNumbers = new Set<number>();
+    const triedCodes = new Set<string>();
 
-    // لو سبقنا طلب آخر إلى الرقم نفسه (تعارض نادر) نجرّب الرقم التالي.
+    // لو سبقنا طلب آخر إلى الرمز نفسه (تعارض نادر) نجرّب رقمًا آخر.
     for (let attempt = 0; attempt < 12; attempt++) {
-      const seq = nextSequenceNumber(existingCodes, triedNumbers);
-      const code = `${CODE_PREFIX}${seq}`;
+      const code = generateNameCode(fullName, existingCodes, triedCodes);
       const email = studentCodeToEmail(code);
 
       const { data: created, error: createError } = await adminClient.auth.admin.createUser({
@@ -165,8 +166,8 @@ Deno.serve(async (req) => {
           { status: 500, headers: jsonHeaders }
         );
       }
-      // else: الرقم محجوز — نجرّب الذي يليه
-      triedNumbers.add(seq);
+      // else: الرمز محجوز — نجرّب رقمًا آخر
+      triedCodes.add(normalizeStudentCode(code));
     }
 
     if (!createdUserId) {

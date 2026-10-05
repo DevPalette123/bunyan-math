@@ -78,3 +78,75 @@ export function nextSequenceNumber(existingCodes: string[], skip: Set<number> = 
   while (used.has(n)) n++;
   return n;
 }
+
+// ───────────── رمز الدخول الجديد: حرفان من الاسم + رقمان (مثل Mo-12) ─────────────
+
+const AR_TO_LATIN: Record<string, string> = {
+  "ا": "a", "أ": "a", "إ": "i", "آ": "a", "ٱ": "a", "ء": "a", "ئ": "i", "ؤ": "o", "ى": "a",
+  "ب": "b", "ت": "t", "ث": "t", "ج": "j", "ح": "h", "خ": "k", "د": "d", "ذ": "d",
+  "ر": "r", "ز": "z", "س": "s", "ش": "s", "ص": "s", "ض": "d", "ط": "t", "ظ": "z",
+  "ع": "a", "غ": "g", "ف": "f", "ق": "q", "ك": "k", "ل": "l", "م": "m", "ن": "n",
+  "ه": "h", "ة": "h", "و": "w", "ي": "y",
+};
+// حروف المد: إن جاءت ثانيةً تعطي حرفًا متحركًا (ناصر → Na، نور → No، سيف → Si).
+const LONG_VOWEL: Record<string, string> = { "ا": "a", "أ": "a", "آ": "a", "و": "o", "ي": "i", "ى": "a" };
+// حروف تبدأ بصوت متحرك: نأخذ بعدها الحرف الثاني نفسه (أحمد → Ah، عبد → Ab، علي → Al).
+const VOWEL_START = new Set(["ا", "أ", "إ", "آ", "ٱ", "ع", "ء", "ئ", "ؤ"]);
+
+/**
+ * أول حرفين لاتينيين من اسم الطالب، الأول كبير والثاني صغير:
+ * محمد → Mo ، ناصر → Na ، أحمد → Ah ، فاطمة → Fa ، سعيد → Sa ، يوسف → Yo.
+ * اسم لاتيني يؤخذ حرفاه الأولان كما هما. وإن لم نجد حروفًا نستعمل «St».
+ */
+export function nameCodePrefix(fullName: string): string {
+  const first = fullName
+    .normalize("NFKC")
+    .replace(/[\u064B-\u065F\u0670\u0640]/g, "") // التشكيل والتطويل
+    .trim()
+    .split(/\s+/)[0] ?? "";
+
+  const latin = first.replace(/[^A-Za-z]/g, "");
+  if (latin.length >= 2) return latin[0].toUpperCase() + latin[1].toLowerCase();
+
+  let name = first.replace(/[^\u0621-\u064A]/g, "");
+  if (name.length > 3 && name.startsWith("ال")) name = name.slice(2); // الجوهرة → جوهرة
+  if (name.length < 2) return "St";
+  if (name.startsWith("محم")) return "Mo"; // محمد، محمود، محمد علي …
+
+  const a = name[0];
+  const b = name[1];
+  const l1 = AR_TO_LATIN[a];
+  if (!l1) return "St";
+  let l2: string | undefined;
+  if (VOWEL_START.has(a)) l2 = AR_TO_LATIN[b];
+  else l2 = LONG_VOWEL[b] ?? "a";
+  if (!l2) l2 = "a";
+  return l1.toUpperCase() + l2.toLowerCase();
+}
+
+/**
+ * يولّد رمزًا فريدًا مثل Mo-12. `existingCodes` الرموز الموجودة فعلًا، و`skip` رموز
+ * (بصيغتها الموحّدة) جرّبناها للتو وتبيّن أنها محجوزة. الرقمان من ١٠ إلى ٩٩، فإن امتلأت
+ * كلها لهذا الحرفين نستعمل ثلاثة أرقام (١٠٠–٩٩٩).
+ */
+export function generateNameCode(
+  fullName: string,
+  existingCodes: string[],
+  skip: Set<string> = new Set()
+): string {
+  const prefix = nameCodePrefix(fullName);
+  const used = new Set<string>(skip);
+  for (const c of existingCodes) used.add(normalizeStudentCode(c));
+
+  for (const [lo, hi] of [[10, 99], [100, 999]] as const) {
+    const free: number[] = [];
+    for (let n = lo; n <= hi; n++) {
+      if (!used.has(normalizeStudentCode(`${prefix}${n}`))) free.push(n);
+    }
+    if (free.length > 0) {
+      const n = free[Math.floor(Math.random() * free.length)];
+      return `${prefix}-${n}`;
+    }
+  }
+  throw new Error("لا توجد أرقام متاحة لهذا الاسم.");
+}
